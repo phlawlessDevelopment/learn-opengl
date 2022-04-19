@@ -14,5 +14,3 @@ public:
     void Delete();
 };
 #endif
-
-
