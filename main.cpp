@@ -137,6 +137,7 @@ int main()
 	//need to enable the atrib array
 	glEnableVertexAttribArray(0);
 	// tell opengl the layout of our vertices
+	// this binds to teh currently bound VAO
 	glVertexAttribPointer(0,2,GL_FLOAT,GL_FALSE,2*sizeof(float),0);
 
 	unsigned int IBO;
