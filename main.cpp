@@ -4,6 +4,9 @@
 #include <fstream>
 #include <string>
 #include <sstream>
+#include "VertexBuffer.h"
+#include "IndexBuffer.h"
+#include "VertexArray.h"
 
 
 struct ShaderProgramSource{
@@ -123,51 +126,44 @@ int main()
 		0,1,2,
 		2,3,0
 	};
+	//create vertex array
+	VertexArray va;
+	//create vertex buffer
+	VertexBuffer vb(positions, sizeof(positions));
+	//create layout
+	VertexBufferLayout layout;
+	layout.Push<float>(2);
+	//link buffer and layout to the vertex array
+	va.AddBuffer(vb,layout);
+	//create index buffer
+	IndexBuffer ib(indicies,6);
 	
-	unsigned int VAO;
-	glGenVertexArrays(1, &VAO);
-
-	//create a buffer bind it and add data
-	unsigned int VBO;
-	glGenBuffers(1, &VBO);
-	
-	glBindVertexArray(VAO);
-	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(positions), positions, GL_DYNAMIC_DRAW);
-	//need to enable the atrib array
-	glEnableVertexAttribArray(0);
-	// tell opengl the layout of our vertices
-	// this binds to teh currently bound VAO
-	glVertexAttribPointer(0,2,GL_FLOAT,GL_FALSE,2*sizeof(float),0);
-
-	unsigned int IBO;
-	glGenBuffers(1, &IBO);
-	glBindVertexArray(VAO);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IBO);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indicies), indicies, GL_DYNAMIC_DRAW);
-	
+	//shader stuff
 	ShaderProgramSource source = ParseShader("../shaders/Basic.shader");
-
 	unsigned int shader = CreateShader(source.VertexSource,source.FragmentSource);
 	glUseProgram(shader);
 	int location = glGetUniformLocation(shader,"u_Color");
+
+	// used to make the square animate color	
 	float red= 0.0f;
 	float increment = 2.0f;
-	/* test movement code */
-	// /* 
+	//delta time stuff
+	float deltaTime;
 	double currentTime;
 	double lastTime = glfwGetTime(); 
-	float deltaTime;
+	/* test movement code */
+	/* 
 	float speed = 3.0f;
-	//  */
-	// Main while loop
+	*/
+	// Main loop
 	while (!glfwWindowShouldClose(window))
 	{	
-		/* test movement code */
-		// /* 
+		// calculate delta time
 		currentTime = glfwGetTime();
 		deltaTime = float(currentTime - lastTime);
 		lastTime = currentTime;
+		/* test movement code */
+		/* 
 		if (glfwGetKey(window, GLFW_KEY_W ) == GLFW_PRESS){
 			for(int i=0 ;i<positionsLength; i++){
 				if(i%2!=0){
@@ -196,19 +192,24 @@ int main()
 				}
 			}
 		}
-		// */
+	 */
+		//clear screen
 		glClear(GL_COLOR_BUFFER_BIT);
-		glBindVertexArray(VAO);
-		/* render here */
-	
+		/* rendering */
+		ib.Bind();
+		va.Bind();
+		
 		glUniform4f(location, red, 0.3f, 0.8f, 1.0f);
 		glBufferData(GL_ARRAY_BUFFER, sizeof(positions), positions, GL_DYNAMIC_DRAW);
 		glDrawElements(GL_TRIANGLES,6,GL_UNSIGNED_INT,nullptr);
+
+		//animate stuff
 		red += increment * deltaTime;
 		if(red> 1.0f || red<0.0f){
 			increment*=-1.0f;
 		}
 
+		/* end rendering */
 		// Swap the back buffer with the front buffer
 		glfwSwapBuffers(window);
 		// Take care of all GLFW events
