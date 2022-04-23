@@ -21,7 +21,6 @@ int main()
 	}
 	
 	GLFWwindow* window = glfwCreateWindow(800, 600, "phlawlessEngine", NULL, NULL);
-
 	if (window == NULL)
 	{
 		std::cout << "Failed to create GLFW window" << std::endl;
@@ -29,8 +28,7 @@ int main()
 		return -1;
 	}
 
-	glfwMakeContextCurrent(window);	
-
+	glfwMakeContextCurrent(window);
 	if(glewInit()!= GLEW_OK){
 		std::cout << "Failed to init GLEW " << std::endl;
 	}
@@ -39,12 +37,13 @@ int main()
 		-0.1f, -0.1f, 0.0f, 0.0f,
 		0.1f, -0.1f, 1.0f, 0.0f,
 		0.1f, 0.1f, 1.0f, 1.0f,
-     	-0.1f, 0.1f, 0.0f, 0.1f
+     	-0.1f, 0.1f, 0.0f, 1.0f
 	};
 	unsigned int indicies[]={
 		0,1,2,
 		2,3,0
 	};
+	glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
 	VertexArray va;
 	VertexBuffer vb(positions, 4 * 4 * sizeof(float));
 	VertexBufferLayout layout;
@@ -58,7 +57,7 @@ int main()
 	shader.Bind();
 	shader.SetUniform4f("u_Color",0.8f,0.3f,0.8f,1.0f);
 	
-	Texture texture("res/textures/dice.png");
+	Texture texture("../res/textures/dice.png");
 	texture.Bind(0);
 	shader.SetUniform1i("u_Texture", 0);
 	
