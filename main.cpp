@@ -6,6 +6,7 @@
 #include "IndexBuffer.h"
 #include "VertexArray.h"
 #include "Shader.h"
+#include "Texture.h"
 
 
 
@@ -33,21 +34,22 @@ int main()
 	if(glewInit()!= GLEW_OK){
 		std::cout << "Failed to init GLEW " << std::endl;
 	}
-	const unsigned int positionsLength = 8;
+	const unsigned int positionsLength = 16;
 	float positions[positionsLength]= {
-		-0.1f, -0.1f,
-		0.1f, -0.1f,
-		0.1f, 0.1f,
-     	-0.1f, 0.1f,
+		-0.1f, -0.1f, 0.0f, 0.0f,
+		0.1f, -0.1f, 1.0f, 0.0f,
+		0.1f, 0.1f, 1.0f, 1.0f,
+     	-0.1f, 0.1f, 0.0f, 0.1f
 	};
 	unsigned int indicies[]={
 		0,1,2,
 		2,3,0
 	};
 	VertexArray va;
-	VertexBuffer vb(positions, sizeof(positions));
+	VertexBuffer vb(positions, 4 * 4 * sizeof(float));
 	VertexBufferLayout layout;
 
+	layout.Push<float>(2);
 	layout.Push<float>(2);
 	va.AddBuffer(vb,layout);
 	IndexBuffer ib(indicies,6);
@@ -55,18 +57,18 @@ int main()
 	Shader shader("../shaders/Basic.shader");
 	shader.Bind();
 	shader.SetUniform4f("u_Color",0.8f,0.3f,0.8f,1.0f);
-
-	// vb.Unbind();
-	// ib.Unbind();
-	// shader.Unbind();
-
+	
+	Texture texture("res/textures/dice.png");
+	texture.Bind(0);
+	shader.SetUniform1i("u_Texture", 0);
+	
 	Renderer renderer;
 
 	while (!glfwWindowShouldClose(window))
 	{	
 
 		renderer.Clear();
-
+		glClearColor(0.8f, 0.3f, 0.8f, 1.0f);
 		renderer.Draw(va,ib,shader);	
 
 		glfwSwapBuffers(window);
