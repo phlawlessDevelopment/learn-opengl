@@ -9,6 +9,10 @@
 #include "Texture.h"
 #include "vendor/glm/glm.hpp"
 #include "vendor/glm/gtc/matrix_transform.hpp"
+#include "vendor/imgui/imgui.h"
+#include "vendor/imgui/imgui_impl_glfw.h"
+#include "vendor/imgui/imgui_impl_opengl3.h"
+
 
 
 int main()
@@ -33,12 +37,18 @@ int main()
 	if(glewInit()!= GLEW_OK){
 		std::cout << "Failed to init GLEW " << std::endl;
 	}
+	ImGui::CreateContext();
+	ImGui_ImplGlfw_InitForOpenGL(window,true);
+	ImGui_ImplOpenGL3_Init();
+	ImGui::StyleColorsDark();
+	
+
 	const unsigned int positionsLength = 16;
 	float positions[positionsLength]= {
-		-0.5f, -0.5f, 0.0f, 0.0f,
-		0.5f, -0.5f, 1.0f, 0.0f,
-		0.5f, 0.5f, 1.0f, 1.0f,
-     	-0.5f, 0.5f, 0.0f, 1.0f
+		100.0f, 100.0f, 0.0f, 0.0f,
+		200.0f, 100.0f, 1.0f, 0.0f,
+		200.0f, 200.0f, 1.0f, 1.0f,
+     	100.0f, 200.0f, 0.0f, 1.0f
 	};
 	unsigned int indicies[]={
 		0,1,2,
@@ -59,14 +69,18 @@ int main()
 	IndexBuffer ib(indicies,6);
 
 	// 4x3
-	// glm::mat4 projectionMatrix = glm::ortho(-2.0f,2.0f,-1.5f,1.5f,-1.0f,1.0f);
-	// no change
-	glm::mat4 projectionMatrix = glm::ortho(-1.0f,1.0f,-1.0f,1.0f,-1.0f,1.0f);
+	glm::mat4 projection = glm::ortho(0.0f,640.0f,0.0f,480.0f,-1.0f,1.0f);
+	// "camera" movement
+	glm::mat4 view = glm::translate(glm::mat4(1.0f), glm::vec3(-100,0,0));
+	// object movement
+	glm::mat4 model = glm::translate(glm::mat4(1.0f),glm::vec3(200,200,0));
+	//opengl expects these in "reverse" order
+	glm::mat4 MVP = projection * view * model;
 
 	Shader shader("../shaders/Basic.shader");
 	shader.Bind();
 	shader.SetUniform4f("u_Color",0.2f,0.2f,0.4f,1.0f);
-	shader.SetUniformMat4f("u_ModelViewProjection",projectionMatrix);
+	shader.SetUniformMat4f("u_ModelViewProjection",MVP);
 	
 	Texture texture("../res/textures/dice.png");
 	texture.Bind(0);
@@ -74,18 +88,29 @@ int main()
 	
 	Renderer renderer;
 
+
 	while (!glfwWindowShouldClose(window))
 	{	
 
 		renderer.Clear();
+
+		ImGui_ImplOpenGL3_NewFrame();
+		ImGui_ImplGlfw_NewFrame();
+
+
+
 		glClearColor(0.2f,0.2f,0.4f,1.0f);
 		renderer.Draw(va,ib,shader);	
+
+		ImGui::Render();
+		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
 		glfwSwapBuffers(window);
 
 		glfwPollEvents();
 	}
 
+	ImGui_ImplGlfw_Shutdown();
 	glfwDestroyWindow(window);
 	glfwTerminate();
 	return 0;

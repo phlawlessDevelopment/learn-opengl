@@ -8,25 +8,28 @@ find_package(OpenGL REQUIRED)
 find_package(glfw3 3.3 REQUIRED)
 find_package(GLEW REQUIRED)
 
+
 include_directories(
         ${PROJECT_SOURCE_DIR}/src/vendor/stb
         ${PROJECT_SOURCE_DIR}/src/renderer
         ${PROJECT_SOURCE_DIR}/src
         ${GLEW_INCLUDE_DIRS}
         )
-
+        
 add_subdirectory(
         ${PROJECT_SOURCE_DIR}/src/vendor/glm
+        ${PROJECT_SOURCE_DIR}/src/vendor/imgui
 )
-
 file(GLOB all_SRCS
-        "${PROJECT_SOURCE_DIR}/src/*.cpp"
-        "${PROJECT_SOURCE_DIR}/src/*.c"
-        "${PROJECT_SOURCE_DIR}/src/renderer/*.cpp"
-        "${PROJECT_SOURCE_DIR}/src/renderer/*.c"
-        "${PROJECT_SOURCE_DIR}/src/vendor/stb/*.cpp"
-        "${PROJECT_SOURCE_DIR}/src/vendor/stb/*.c"
-        )
+"${PROJECT_SOURCE_DIR}/src/*.cpp"
+"${PROJECT_SOURCE_DIR}/src/*.c"
+"${PROJECT_SOURCE_DIR}/src/renderer/*.cpp"
+"${PROJECT_SOURCE_DIR}/src/renderer/*.c"
+"${PROJECT_SOURCE_DIR}/src/vendor/stb/*.cpp"
+"${PROJECT_SOURCE_DIR}/src/vendor/stb/*.c"
+"${PROJECT_SOURCE_DIR}/src/vendor/imgui/*.cpp"
+"${PROJECT_SOURCE_DIR}/src/vendor/imgui/*.c"
+)
 
 
 add_executable(engine 
@@ -37,7 +40,7 @@ ${all_SRCS}
 target_link_libraries(engine
 glfw 
 OpenGL::GL
-${GLM_INCLUDE_DIRS}
+${IMGUI_DIR}
 ${CMAKE_DL_LIBS}
 ${GLEW_LIBRARIES}
 # ${GLUT_LIBRARY}
