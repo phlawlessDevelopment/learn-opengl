@@ -9,9 +9,8 @@
 #include "Texture.h"
 #include "vendor/glm/glm.hpp"
 #include "vendor/glm/gtc/matrix_transform.hpp"
-#include "vendor/imgui/imgui.h"
-#include "vendor/imgui/imgui_impl_glfw.h"
-#include "vendor/imgui/imgui_impl_opengl3.h"
+#include "gui/Gui.h"
+
 
 
 
@@ -37,10 +36,7 @@ int main()
 	if(glewInit()!= GLEW_OK){
 		std::cout << "Failed to init GLEW " << std::endl;
 	}
-	ImGui::CreateContext();
-	ImGui_ImplGlfw_InitForOpenGL(window,true);
-	ImGui_ImplOpenGL3_Init();
-	ImGui::StyleColorsDark();
+
 	
 
 	const unsigned int positionsLength = 16;
@@ -67,7 +63,7 @@ int main()
 	layout.Push<float>(2);
 	va.AddBuffer(vb,layout);
 	IndexBuffer ib(indicies,6);
-
+	
 	// 4x3
 	glm::mat4 projection = glm::ortho(0.0f,640.0f,0.0f,480.0f,-1.0f,1.0f);
 	// "camera" movement
@@ -87,31 +83,23 @@ int main()
 	shader.SetUniform1i("u_Texture", 0);
 	
 	Renderer renderer;
-
+	GUI gui(window);
 
 	while (!glfwWindowShouldClose(window))
 	{	
 
 		renderer.Clear();
-
-		ImGui_ImplOpenGL3_NewFrame();
-		ImGui_ImplGlfw_NewFrame();
-		ImGui::NewFrame();
-
-
-
-		glClearColor(0.2f,0.2f,0.4f,1.0f);
-		renderer.Draw(va,ib,shader);	
-
-		ImGui::Render();
-		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-
+		/*rendering */
+		renderer.Draw(va,ib,shader);
+		gui.Render();	
+		/*end rendering */
+	
 		glfwSwapBuffers(window);
 
 		glfwPollEvents();
 	}
 
-	ImGui_ImplGlfw_Shutdown();
+	
 	glfwDestroyWindow(window);
 	glfwTerminate();
 	return 0;

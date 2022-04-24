@@ -25,6 +25,8 @@ file(GLOB all_SRCS
 "${PROJECT_SOURCE_DIR}/src/*.c"
 "${PROJECT_SOURCE_DIR}/src/renderer/*.cpp"
 "${PROJECT_SOURCE_DIR}/src/renderer/*.c"
+"${PROJECT_SOURCE_DIR}/src/gui/*.cpp"
+"${PROJECT_SOURCE_DIR}/src/gui/*.c"
 "${PROJECT_SOURCE_DIR}/src/vendor/stb/*.cpp"
 "${PROJECT_SOURCE_DIR}/src/vendor/stb/*.c"
 "${PROJECT_SOURCE_DIR}/src/vendor/imgui/*.cpp"
