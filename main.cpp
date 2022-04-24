@@ -7,7 +7,8 @@
 #include "VertexArray.h"
 #include "Shader.h"
 #include "Texture.h"
-
+#include "vendor/glm/glm.hpp"
+#include "vendor/glm/gtc/matrix_transform.hpp"
 
 
 int main()
@@ -20,7 +21,7 @@ int main()
 		return -1;
 	}
 	
-	GLFWwindow* window = glfwCreateWindow(800, 600, "phlawlessEngine", NULL, NULL);
+	GLFWwindow* window = glfwCreateWindow(640, 480, "phlawlessEngine", NULL, NULL);
 	if (window == NULL)
 	{
 		std::cout << "Failed to create GLFW window" << std::endl;
@@ -34,10 +35,10 @@ int main()
 	}
 	const unsigned int positionsLength = 16;
 	float positions[positionsLength]= {
-		-0.1f, -0.1f, 0.0f, 0.0f,
-		0.1f, -0.1f, 1.0f, 0.0f,
-		0.1f, 0.1f, 1.0f, 1.0f,
-     	-0.1f, 0.1f, 0.0f, 1.0f
+		-0.5f, -0.5f, 0.0f, 0.0f,
+		0.5f, -0.5f, 1.0f, 0.0f,
+		0.5f, 0.5f, 1.0f, 1.0f,
+     	-0.5f, 0.5f, 0.0f, 1.0f
 	};
 	unsigned int indicies[]={
 		0,1,2,
@@ -57,9 +58,15 @@ int main()
 	va.AddBuffer(vb,layout);
 	IndexBuffer ib(indicies,6);
 
+	// 4x3
+	// glm::mat4 projectionMatrix = glm::ortho(-2.0f,2.0f,-1.5f,1.5f,-1.0f,1.0f);
+	// no change
+	glm::mat4 projectionMatrix = glm::ortho(-1.0f,1.0f,-1.0f,1.0f,-1.0f,1.0f);
+
 	Shader shader("../shaders/Basic.shader");
 	shader.Bind();
 	shader.SetUniform4f("u_Color",0.2f,0.2f,0.4f,1.0f);
+	shader.SetUniformMat4f("u_ModelViewProjection",projectionMatrix);
 	
 	Texture texture("../res/textures/dice.png");
 	texture.Bind(0);
