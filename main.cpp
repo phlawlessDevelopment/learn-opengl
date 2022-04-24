@@ -43,7 +43,11 @@ int main()
 		0,1,2,
 		2,3,0
 	};
-	glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
+
+	// default blend settings
+	// glEnable(GL_BLEND);
+	// glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
+	
 	VertexArray va;
 	VertexBuffer vb(positions, 4 * 4 * sizeof(float));
 	VertexBufferLayout layout;
@@ -55,7 +59,7 @@ int main()
 
 	Shader shader("../shaders/Basic.shader");
 	shader.Bind();
-	shader.SetUniform4f("u_Color",0.8f,0.3f,0.8f,1.0f);
+	shader.SetUniform4f("u_Color",0.2f,0.2f,0.4f,1.0f);
 	
 	Texture texture("../res/textures/dice.png");
 	texture.Bind(0);
@@ -67,7 +71,7 @@ int main()
 	{	
 
 		renderer.Clear();
-		glClearColor(0.8f, 0.3f, 0.8f, 1.0f);
+		glClearColor(0.2f,0.2f,0.4f,1.0f);
 		renderer.Draw(va,ib,shader);	
 
 		glfwSwapBuffers(window);

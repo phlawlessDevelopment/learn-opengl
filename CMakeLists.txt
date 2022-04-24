@@ -7,19 +7,27 @@ set(CMAKE_BUILD_TYPE Debug)
 find_package(OpenGL REQUIRED)
 find_package(glfw3 3.3 REQUIRED)
 find_package(GLEW REQUIRED)
-# find_package(GLUT REQUIRED)
+
 include_directories(
-        ${PROJECT_SOURCE_DIR}/include
+        ${PROJECT_SOURCE_DIR}/src/vendor/stb
+        ${PROJECT_SOURCE_DIR}/src/renderer
         ${PROJECT_SOURCE_DIR}/src
         ${GLEW_INCLUDE_DIRS}
-        # ${GLUT_INCLUDE_DIRS}
+        )
+
+add_subdirectory(
+        ${PROJECT_SOURCE_DIR}/src/vendor/glm
 )
+
 file(GLOB all_SRCS
-        "${PROJECT_SOURCE_DIR}/include/*.h"
-        "${PROJECT_SOURCE_DIR}/include/*.hpp"
         "${PROJECT_SOURCE_DIR}/src/*.cpp"
         "${PROJECT_SOURCE_DIR}/src/*.c"
+        "${PROJECT_SOURCE_DIR}/src/renderer/*.cpp"
+        "${PROJECT_SOURCE_DIR}/src/renderer/*.c"
+        "${PROJECT_SOURCE_DIR}/src/vendor/stb/*.cpp"
+        "${PROJECT_SOURCE_DIR}/src/vendor/stb/*.c"
         )
+
 
 add_executable(engine 
 main.cpp
@@ -29,6 +37,7 @@ ${all_SRCS}
 target_link_libraries(engine
 glfw 
 OpenGL::GL
+${GLM_INCLUDE_DIRS}
 ${CMAKE_DL_LIBS}
 ${GLEW_LIBRARIES}
 # ${GLUT_LIBRARY}
