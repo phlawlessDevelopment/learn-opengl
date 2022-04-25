@@ -39,58 +39,80 @@ int main()
 
 	
 
-	const unsigned int positionsLength = 16;
+	const unsigned int positionsLength = 64;
 	float positions[positionsLength]= {
-		100.0f, 100.0f, 0.0f, 0.0f,
-		200.0f, 100.0f, 1.0f, 0.0f,
-		200.0f, 200.0f, 1.0f, 1.0f,
-     	100.0f, 200.0f, 0.0f, 1.0f
+		-1.5f, -0.5f, 0.0f, 0.0f, 0.18f, 0.6f,0.96f,1.0f,
+		-0.5f, -0.5f, 1.0f, 0.0f, 0.18f, 0.6f,0.96f,1.0f,
+		-0.5f, 0.5f, 1.0f, 1.0f, 0.18f, 0.6f,0.96f,1.0f,
+     	-1.5f, 0.5f,0.0f, 1.0f, 0.18f, 0.6f,0.96f,1.0f,
+
+		0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.93f , 0.24f,1.0f,
+		1.5f, -0.5f, 1.0f, 0.0f, 1.0f, 0.93f , 0.24f,1.0f,
+		1.5f, 0.5f, 1.0f, 1.0f,1.0f, 0.93f , 0.24f,1.0f,
+     	0.5f, 0.5f, 0.0f, 1.0f,1.0f, 0.93f , 0.24f,1.0f,
+
 	};
-	unsigned int indicies[]={
-		0,1,2,
-		2,3,0
+	const unsigned int indicesLength = 12;
+	unsigned int indicies[12]={
+		0,1,2,2,3,0,
+		4,5,6,6,7,4
 	};
 
 	// default blend settings
-	// glEnable(GL_BLEND);
-	// glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
 	
 	VertexArray va;
-	VertexBuffer vb(positions, 4 * 4 * sizeof(float));
+	VertexBuffer vb(positions, positionsLength * sizeof(float));
 	VertexBufferLayout layout;
 
 	layout.Push<float>(2);
 	layout.Push<float>(2);
+	layout.Push<float>(4);
 	va.AddBuffer(vb,layout);
-	IndexBuffer ib(indicies,6);
+	IndexBuffer ib(indicies,indicesLength);
 	
 	// 4x3
-	glm::mat4 projection = glm::ortho(0.0f,640.0f,0.0f,480.0f,-1.0f,1.0f);
+	glm::mat4 projection = glm::ortho(-2.0f,2.0f,-1.5f,1.5f,-1.0f,1.0f);
 	// "camera" movement
-	glm::mat4 view = glm::translate(glm::mat4(1.0f), glm::vec3(-100,0,0));
+	glm::mat4 view = glm::translate(glm::mat4(1.0f), glm::vec3(0.0,0.0,0.0));
 	// object movement
-	glm::mat4 model = glm::translate(glm::mat4(1.0f),glm::vec3(200,200,0));
-	//opengl expects these in "reverse" order
-	glm::mat4 MVP = projection * view * model;
+
 
 	Shader shader("../shaders/Basic.shader");
 	shader.Bind();
-	shader.SetUniform4f("u_Color",0.2f,0.2f,0.4f,1.0f);
-	shader.SetUniformMat4f("u_ModelViewProjection",MVP);
+	shader.SetUniform<glm::vec4>("u_Color",glm::vec4(1.0f,1.0f,1.0f,1.0f));
+	
 	
 	Texture texture("../res/textures/dice.png");
 	texture.Bind(0);
-	shader.SetUniform1i("u_Texture", 0);
+	shader.SetUniform<int>("u_Texture", 0);
 	
 	Renderer renderer;
-	GUI gui(window);
+	glm::vec3 translationA = glm::vec3(0,0,0);
+	glm::vec3 translationB = glm::vec3(400,200,0);
+	GUI gui(window, &translationA.x,&translationB.x);
 
 	while (!glfwWindowShouldClose(window))
 	{	
-
 		renderer.Clear();
 		/*rendering */
-		renderer.Draw(va,ib,shader);
+		
+		shader.Bind();
+		{
+			glm::mat4 model = glm::translate(glm::mat4(1.0f),translationA);
+			glm::mat4 mvp = projection * view * model;
+			shader.SetUniform<glm::mat4>("u_ModelViewProjection",mvp);
+			renderer.Draw(va,ib,shader);
+		}
+		// {
+		// 	glm::mat4 model = glm::translate(glm::mat4(1.0f),translationB);
+		// 	glm::mat4 mvp = projection * view * model;
+		// 	shader.SetUniform<glm::mat4>("u_ModelViewProjection",mvp);
+		// 	renderer.Draw(va,ib,shader);
+		// }
+		
+
 		gui.Render();	
 		/*end rendering */
 	

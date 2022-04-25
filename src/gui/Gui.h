@@ -6,12 +6,12 @@ class GUI
 {
     private:
         GLFWwindow* m_window;
+        float* m_translationA;
+        float* m_translationB;
         int m_Width, m_Height;
-        ImVec2 m_VDockSize, m_HDockSize;
-        ImVec2 m_LDockPos , m_RDockPos, m_TDockPos, m_BDockPos;
-        void ResizeDocks();
+        void ResizeUI();
     public:
-        GUI(GLFWwindow* window);
+        GUI(GLFWwindow* window, float* translationA,float* translationB);
         ~GUI();
         void Render();
 };
