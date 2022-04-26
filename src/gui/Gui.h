@@ -10,7 +10,6 @@ class Gui
         int m_Width, m_Height;
         void ResizeUI();
     public:
-        Gui();
         Gui(GLFWwindow* window);
         ~Gui();
         void Render();

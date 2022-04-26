@@ -1,4 +1,5 @@
 #pragma once
+#include <memory>
 #include <vector>
 #include "VertexBuffer.h"
 #include "IndexBuffer.h"
@@ -8,23 +9,22 @@
 #include "vendor/glm/glm.hpp"
 #include "vendor/glm/gtc/matrix_transform.hpp"
 
-struct RenderSet{
-    VertexArray va;
-    VertexBuffer vb;
-    VertexBufferLayout layout;
-    IndexBuffer ib;
-    Shader shader;
-};
 
 class Renderer
 {
     private:
-        std::vector<RenderSet> m_RenderSets;
+        
     public:
         Renderer();
         ~Renderer();
-        void AddRenderSet(RenderSet& rs);
+
+        void BeginScene();
+        void Submit(const std::shared_ptr<VertexArray>& va);
+        void EndScene();
+        void Flush();
 
         void Clear() const;
-        void Draw() const;
+        void ClearColor(const glm::vec4& color) const;
+        void DrawIndexed(const std::shared_ptr<VertexArray>& va);
+
 };

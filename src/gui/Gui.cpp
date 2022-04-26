@@ -1,22 +1,18 @@
+#include <iostream>
 #include "Gui.h"
-
-Gui::Gui()
-{
-	
-}
 
 Gui::Gui(GLFWwindow* window)
 	:m_Width(0),m_Height(0),
 	m_window(window)
 {
+	if(window == nullptr)
+		return;
+
 	ImGui::CreateContext();
 	ImGuiIO& io = ImGui::GetIO(); (void)io;
 	io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;       // Enable Keyboard Controls
-	//io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
 	io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;           // Enable Docking
-	io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;         // Enable Multi-Viewport / Platform Windows
-	//io.ConfigFlags |= ImGuiConfigFlags_ViewportsNoTaskBarIcons;
-	//io.ConfigFlags |= ImGuiConfigFlags_ViewportsNoMerge;
+	// io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;         // Enable Multi-Viewport / Platform Windows
 	ImGui_ImplGlfw_InitForOpenGL(m_window,true);
 	ImGui_ImplOpenGL3_Init();
 	ImGui::StyleColorsDark();	
@@ -24,10 +20,10 @@ Gui::Gui(GLFWwindow* window)
 }
 Gui::~Gui()
 {
-    ImGui_ImplGlfw_Shutdown();
+
 }
 void Gui::Render()
-{		
+{
 		ResizeUI();
     	ImGui_ImplOpenGL3_NewFrame();
 		ImGui_ImplGlfw_NewFrame();

@@ -1,7 +1,8 @@
 #include "VertexArray.h"
-VertexArray::VertexArray()
+VertexArray::VertexArray(const IndexBuffer& ib)
+    :m_IndexBuffer(ib)
 {
-    	glGenVertexArrays(1, &m_RendererID);
+    glGenVertexArrays(1, &m_RendererID);
 }
 VertexArray::~VertexArray()
 {
