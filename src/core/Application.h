@@ -7,6 +7,7 @@
 #include "vendor/glm/glm.hpp"
 #include "vendor/glm/gtc/matrix_transform.hpp"
 
+#include "helpers.h"
 #include "gui/Gui.h"
 #include "renderer/Renderer.h"
 
@@ -28,8 +29,10 @@ class Application
         std::unique_ptr<VertexArray> m_VertexArray;
         std::unique_ptr<VertexBuffer> m_VertexBuffer;
         std::unique_ptr<IndexBuffer> m_IndexBuffer;
+        
     public:
         Application();
+        Application(Application& a);
         ~Application();
         void Run();
 

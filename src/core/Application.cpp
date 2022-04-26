@@ -3,7 +3,10 @@
 #include "Application.h"
 
 Application::Application()
-    :m_Width(0), m_Height(0) ,m_Window(nullptr), m_Renderer(), m_Gui(nullptr)
+    :m_Window(nullptr), m_Gui(m_Window), m_Renderer(),
+    m_Width(0), m_Height(0),
+    m_Shader(nullptr), m_VertexArray(nullptr),
+    m_VertexBuffer(nullptr), m_IndexBuffer(nullptr)
 {
     
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE); // tells glfw to use modern opengl
@@ -28,10 +31,18 @@ Application::Application()
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
 
-    m_Gui = Gui(m_Window); 
-
+    m_Gui = Gui(m_Window);
 
 }
+Application::Application(Application& a)
+    :m_Window(a.m_Window), m_Gui(a.m_Window), m_Renderer(),
+    m_Width(0), m_Height(0),
+    m_Shader(copy_unique(a.m_Shader)), m_VertexArray(copy_unique(m_VertexArray)),
+    m_VertexBuffer(copy_unique(m_VertexBuffer)), m_IndexBuffer(copy_unique(m_IndexBuffer))
+{
+
+}
+
 Application::~Application()
 {       
         ImGui_ImplGlfw_Shutdown();
@@ -69,8 +80,8 @@ void Application::Run()
     layout.Push<float>(2);
     layout.Push<float>(2);
     layout.Push<float>(4);
-    m_VertexArray -> AddVertexBuffer(m_VertexBuffer);
-    m_VertexArray->SetIndexBuffer(m_IndexBuffer);
+    m_VertexArray -> AddVertexBuffer(std::move(m_VertexBuffer));
+    m_VertexArray->SetIndexBuffer(std::move(m_IndexBuffer));
 
 
     Shader shader("../shaders/Basic.shader");
@@ -94,7 +105,7 @@ void Application::Run()
         /*rendering */
         m_Gui.Render();	
         m_Renderer.BeginScene();
-        m_Renderer.Submit(va);
+        m_Renderer.Submit(std::move(m_VertexArray));
         m_Renderer.EndScene();
         glfwSwapBuffers(m_Window);
         glfwPollEvents();
