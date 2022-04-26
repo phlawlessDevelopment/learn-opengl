@@ -1,4 +1,6 @@
 #pragma once
+#include <memory>
+#include <vector>
 #include "IndexBuffer.h"
 #include "VertexBuffer.h"
 #include "VertexBufferLayout.h"
@@ -7,14 +9,20 @@ class VertexArray
 {
     private:
         unsigned int m_RendererID;
-        IndexBuffer m_IndexBuffer;
+        std::shared_ptr<IndexBuffer> m_IndexBuffer;
+        std::vector<std::shared_ptr<VertexBuffer>> m_VertexBuffers;
 
     public:
-        VertexArray(const IndexBuffer& ib);
+        VertexArray();
         ~VertexArray();
-
-        void AddBuffer(const VertexBuffer& vb, const VertexBufferLayout& layout);
+       
+        void AddVertexBuffer(const std::shared_ptr<VertexBuffer>& vb);
+        void SetIndexBuffer(const std::shared_ptr<IndexBuffer>& ib);
         void Bind() const;
         void Unbind() const;
-        inline IndexBuffer GetIndexBuffer(){return m_IndexBuffer;}
+        inline std::shared_ptr<IndexBuffer> GetIndexBuffer(){return m_IndexBuffer;}
+        static inline VertexArray* Create()
+        {
+            return new VertexArray();
+        } 
 };

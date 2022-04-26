@@ -1,6 +1,7 @@
 #pragma once
 #include <iostream>
 #include <vector>
+#include <memory>
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 #include "vendor/glm/glm.hpp"
@@ -23,6 +24,10 @@ class Application
         Gui m_Gui;
         GLFWwindow* m_Window;
         unsigned int m_Width, m_Height;
+        std::unique_ptr<Shader> m_Shader;
+        std::unique_ptr<VertexArray> m_VertexArray;
+        std::unique_ptr<VertexBuffer> m_VertexBuffer;
+        std::unique_ptr<IndexBuffer> m_IndexBuffer;
     public:
         Application();
         ~Application();

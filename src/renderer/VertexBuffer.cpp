@@ -1,3 +1,4 @@
+#include <memory>
 #include <GL/glew.h>
 #include "VertexBuffer.h"
 
@@ -11,7 +12,7 @@ VertexBuffer::~VertexBuffer()
 {
     glDeleteBuffers(1,&m_RedererID);
 }
-    
+
 void VertexBuffer::Bind() const
 {
     glBindBuffer(GL_ARRAY_BUFFER, m_RedererID);

@@ -1,3 +1,4 @@
+
 #include <memory>
 #include "Application.h"
 
@@ -60,15 +61,16 @@ void Application::Run()
     };
 
 
-    IndexBuffer ib(indicies,indicesLength);
-    VertexArray va(ib);
-    VertexBuffer vb(positions, positionsLength * sizeof(float));
+    m_IndexBuffer.reset(IndexBuffer::Create(indicies,indicesLength));
+    m_VertexArray.reset(VertexArray::Create());
+    m_VertexBuffer.reset(VertexBuffer::Create(positions, positionsLength * sizeof(float)));
     VertexBufferLayout layout;
 
     layout.Push<float>(2);
     layout.Push<float>(2);
     layout.Push<float>(4);
-    va.AddBuffer(vb,layout);
+    m_VertexArray -> AddVertexBuffer(m_VertexBuffer);
+    m_VertexArray->SetIndexBuffer(m_IndexBuffer);
 
 
     Shader shader("../shaders/Basic.shader");
@@ -92,7 +94,7 @@ void Application::Run()
         /*rendering */
         m_Gui.Render();	
         m_Renderer.BeginScene();
-        m_Renderer.Submit(std::make_shared(va));
+        m_Renderer.Submit(va);
         m_Renderer.EndScene();
         glfwSwapBuffers(m_Window);
         glfwPollEvents();
