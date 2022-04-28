@@ -103,5 +103,3 @@ class IndexBuffer
         return new IndexBuffer(data,count);
     }
 };
-
-

@@ -22,12 +22,12 @@ Gui::~Gui()
 {
 
 }
- void Gui::Begin()
- {
-	ImGui_ImplOpenGL3_NewFrame();
-	ImGui_ImplGlfw_NewFrame();
-	ImGui::NewFrame();
- }
+void Gui::Begin()
+{
+ImGui_ImplOpenGL3_NewFrame();
+ImGui_ImplGlfw_NewFrame();
+ImGui::NewFrame();
+}
 void Gui::End()
 {
 	ImGuiIO& io = ImGui::GetIO(); (void)io;
@@ -39,12 +39,16 @@ void Gui::End()
 	// ImGui::RenderPlatformWindowsDefault();
 	// glfwMakeContextCurrent(backup_current_context);
 }
-void Gui::Update()
+void Gui::Update(const int sceneWidth, const int sceneHeight, const unsigned int renderTexID)
 {
 		ResizeUI();
 		ImGuiID dock_id = ImGui::DockSpaceOverViewport(ImGui::GetMainViewport());
 		ImGui::SetNextWindowDockID(dock_id);
+		ImVec2 windowSize = ImVec2(sceneWidth,sceneHeight);
+		ImGui::SetNextWindowSize(windowSize);
 		ImGui::Begin("Scene");
+		// Because I use the texture from OpenGL, I need to invert the V from the UV.
+		ImGui::Image((ImTextureID)renderTexID, windowSize, ImVec2(0, 1), ImVec2(1, 0));
 		ImGui::End();
 		ImGui::Begin("Tree");
 		ImGui::End();

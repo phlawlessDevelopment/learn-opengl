@@ -9,10 +9,12 @@ class Gui
         GLFWwindow* m_window;
         int m_Width, m_Height;
         void ResizeUI();
+        void CalculateSceneSize();
     public:
         Gui(GLFWwindow* window);
         ~Gui();
         void Begin();
         void End();
-        void Update();
+        void Update(const int sceneWidth, const int sceneHeight, const unsigned int renderTexID);
+
 };

@@ -37,6 +37,7 @@ Application::Application()
     std::shared_ptr<VertexBuffer> m_VertexBuffer;
     std::shared_ptr<IndexBuffer> m_IndexBuffer;
     std::shared_ptr<VertexArray> m_VertexArray;
+    std::shared_ptr<FrameBuffer> m_FrameBuffer;
 
     Shader m_Shader("../shaders/Basic.shader");
 }
@@ -80,37 +81,35 @@ void Application::Run()
     m_VertexBuffer.reset(VertexBuffer::Create(positions, positionsLength * sizeof(float)));
     m_IndexBuffer.reset(IndexBuffer::Create(indicies,indicesLength));
     m_VertexArray.reset(VertexArray::Create());
+    m_SceneWidth = 100;
+    m_SceneHeight = 100;
+    m_FrameBuffer.reset(FrameBuffer::Create());
+    
 
     m_VertexBuffer->SetLayout(layout);
     m_VertexArray -> AddVertexBuffer(m_VertexBuffer);
     m_VertexArray-> SetIndexBuffer(m_IndexBuffer);
 
-
-    
-    // // 4x3
-    // glm::mat4 projection = glm::ortho(-2.0f,2.0f,-1.5f,1.5f,-1.0f,1.0f);
-    // // "camera" movement
-    // glm::mat4 view = glm::translate(glm::mat4(1.0f), glm::vec3(0.0,0.0,0.0));
-    // // object movement
-    // glm::mat4 model = glm::translate(glm::mat4(1.0f),glm::vec3(0,0,0));
-    // glm::mat4 mvp = projection * view * model;
+    Texture texture("../res/textures/dice.png");
+    texture.Bind(0);
+    m_Shader.Bind();
+    m_Shader.SetUniform<glm::vec4>("u_Color",glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
+    m_Shader.SetUniform<int>("u_Texture", 0);
+    m_Shader.SetUniform<glm::mat4>("u_ViewProjection", m_Camera.GetViewProjectionMatrix());
 
     while (!glfwWindowShouldClose(m_Window))
     {	
-        m_Shader.Bind();
-        Texture texture("../res/textures/dice.png");
-        texture.Bind(0);
-        m_Shader.SetUniform<glm::vec4>("u_Color",glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
-        m_Shader.SetUniform<int>("u_Texture", 0);
-        m_Shader.SetUniform<glm::mat4>("u_ViewProjection", m_Camera.GetViewProjectionMatrix());
+    
         m_Renderer.Clear();
         /*rendering */
+        m_FrameBuffer->Begin(m_SceneWidth,m_SceneHeight);
         m_Gui.Begin();
-        m_Gui.Update();	
+        m_Gui.Update(m_SceneWidth,m_SceneHeight,m_FrameBuffer->GetRenderTexture());	
         m_Gui.End();
         m_Renderer.BeginScene();
         m_Renderer.Submit(m_VertexArray);
         m_Renderer.EndScene();
+        m_FrameBuffer->End();
         glfwSwapBuffers(m_Window);
         glfwPollEvents();
         // ResizeWindow();
