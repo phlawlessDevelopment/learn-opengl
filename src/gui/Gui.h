@@ -15,6 +15,6 @@ class Gui
         ~Gui();
         void Begin();
         void End();
-        void Update(const int sceneWidth, const int sceneHeight, const unsigned int renderTexID);
+        void Update(const unsigned int renderTexID);
 
 };

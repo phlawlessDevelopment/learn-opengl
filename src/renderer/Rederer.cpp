@@ -13,7 +13,7 @@ Renderer::~Renderer()
 }
 void Renderer::Clear() const
 {
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 }
 void Renderer::ClearColor(const glm::vec4& color) const
 {
@@ -24,9 +24,10 @@ void Renderer::BeginScene()
 {
 
 }
-void Renderer::Submit(const std::shared_ptr<VertexArray>& va)
-{
+void Renderer::Submit(const std::shared_ptr<VertexArray>& va ,std::shared_ptr<FrameBuffer> fb)
+{	fb->Bind();
 	DrawIndexed(va);
+	fb->Unbind();
 }
 void Renderer::EndScene()
 {

@@ -26,12 +26,12 @@ class Application
         Gui m_Gui;
         GLFWwindow* m_Window;
         int m_Width, m_Height, m_SceneWidth, m_SceneHeight;
-        Shader m_Shader;
         OrthographicCamera m_Camera;
         std::shared_ptr<VertexArray> m_VertexArray;
         std::shared_ptr<VertexBuffer> m_VertexBuffer;
         std::shared_ptr<IndexBuffer> m_IndexBuffer;
         std::shared_ptr<FrameBuffer> m_FrameBuffer;
+        Shader m_Shader;
         void ResizeWindow();
     public:
         Application();

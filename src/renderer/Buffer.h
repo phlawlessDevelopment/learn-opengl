@@ -103,3 +103,23 @@ class IndexBuffer
         return new IndexBuffer(data,count);
     }
 };
+
+class FrameBuffer
+{
+    private:
+        unsigned int m_RedererID;
+        unsigned int m_RenderTexID;
+        unsigned int m_RenderBuffer;
+        
+    public:
+        FrameBuffer(const int width,const int height);
+        ~FrameBuffer();
+    
+    void Bind() const;
+    void Unbind() const;
+    inline unsigned int GetRenderTexture() const {return m_RenderTexID;}
+    static inline FrameBuffer* Create(const int width,const int height)
+    {
+        return new FrameBuffer(width,height);
+    }
+};

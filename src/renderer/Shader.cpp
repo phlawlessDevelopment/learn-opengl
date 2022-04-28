@@ -32,7 +32,7 @@ unsigned int Shader::CompileShader( unsigned int type, const std::string& source
 	glCompileShader(id);
 
 	int result;
-	glGetShaderiv(id,GL_COMPILE_STATUS, &result);
+	glGetShaderiv(id, GL_COMPILE_STATUS, &result);
 
 	if (result == GL_FALSE){
 
@@ -55,6 +55,7 @@ unsigned int Shader::CreateShader(const std::string& vertexShader, const std::st
 	unsigned int program = glCreateProgram();
 	unsigned int vs = CompileShader(GL_VERTEX_SHADER,vertexShader);
 	unsigned int fs = CompileShader(GL_FRAGMENT_SHADER,fragmentShader);
+	
 
 	glAttachShader(program,vs);
 	glAttachShader(program,fs);
@@ -67,6 +68,7 @@ unsigned int Shader::CreateShader(const std::string& vertexShader, const std::st
 
 	return program;
 }
+
 ShaderProgramSource Shader::ParseShader(const std::string& filePath){
 	std::ifstream stream(filePath);
 	enum class ShaderType{

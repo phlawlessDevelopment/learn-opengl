@@ -12,13 +12,14 @@
 class Renderer
 {
     private:
-        
+        std::shared_ptr<FrameBuffer> m_FrameBuffer;
     public:
         Renderer();
         ~Renderer();
 
         void BeginScene();
-        void Submit(const std::shared_ptr<VertexArray>& va);
+        
+        void Submit(const std::shared_ptr<VertexArray>& va ,std::shared_ptr<FrameBuffer> fb);
         void EndScene();
         void Flush();
 

@@ -4,7 +4,7 @@
 
 Application::Application()
     :m_Window(nullptr), m_Gui(m_Window), m_Renderer(),
-    m_Width(0), m_Height(0),
+    m_Width(1024), m_Height(768),
     m_Shader(), m_VertexArray(nullptr),
     m_VertexBuffer(nullptr), m_IndexBuffer(nullptr),
     m_Camera(-2.0f,2.0f,-1.5f,1.5f)
@@ -18,7 +18,7 @@ Application::Application()
         std::cout << "Failed to init glfw" << std::endl;
     }
     
-	m_Window = glfwCreateWindow(640, 480, "phlawlessEngine", NULL, NULL);
+	m_Window = glfwCreateWindow(m_Width, m_Height, "phlawlessEngine", NULL, NULL);
 	if (m_Window == NULL)
     {
         std::cout << "Failed to create glfw window" << std::endl;
@@ -39,7 +39,7 @@ Application::Application()
     std::shared_ptr<VertexArray> m_VertexArray;
     std::shared_ptr<FrameBuffer> m_FrameBuffer;
 
-    Shader m_Shader("../shaders/Basic.shader");
+    
 }
 
 
@@ -51,10 +51,10 @@ Application::~Application()
 }
 void Application::Run()
 {
-        /* temp stuff */
+        /* temp stuf */
         const unsigned int positionsLength = 64;
         float positions[positionsLength]= {
-            -1.5f, -0.5f, 0.0f, 0.0f, 0.18f, 0.6f,0.96f,1.0f,
+           -1.5f, -0.5f, 0.0f, 0.0f, 0.18f, 0.6f,0.96f,1.0f,
             -0.5f, -0.5f, 1.0f, 0.0f, 0.18f, 0.6f,0.96f,1.0f,
             -0.5f, 0.5f, 1.0f, 1.0f, 0.18f, 0.6f,0.96f,1.0f,
             -1.5f, 0.5f,0.0f, 1.0f, 0.18f, 0.6f,0.96f,1.0f,
@@ -81,51 +81,34 @@ void Application::Run()
     m_VertexBuffer.reset(VertexBuffer::Create(positions, positionsLength * sizeof(float)));
     m_IndexBuffer.reset(IndexBuffer::Create(indicies,indicesLength));
     m_VertexArray.reset(VertexArray::Create());
-    m_SceneWidth = 100;
-    m_SceneHeight = 100;
-    m_FrameBuffer.reset(FrameBuffer::Create());
+    m_SceneWidth = 640;
+    m_SceneHeight = 480;
+    m_FrameBuffer.reset(FrameBuffer::Create(m_SceneWidth,m_SceneHeight));
     
 
-    m_VertexBuffer->SetLayout(layout);
+    m_VertexBuffer -> SetLayout(layout);
     m_VertexArray -> AddVertexBuffer(m_VertexBuffer);
-    m_VertexArray-> SetIndexBuffer(m_IndexBuffer);
-
+    m_VertexArray -> SetIndexBuffer(m_IndexBuffer);
+    Shader m_Shader("../shaders/Basic.shader");
     Texture texture("../res/textures/dice.png");
     texture.Bind(0);
     m_Shader.Bind();
-    m_Shader.SetUniform<glm::vec4>("u_Color",glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
     m_Shader.SetUniform<int>("u_Texture", 0);
     m_Shader.SetUniform<glm::mat4>("u_ViewProjection", m_Camera.GetViewProjectionMatrix());
-
+    
     while (!glfwWindowShouldClose(m_Window))
     {	
     
         m_Renderer.Clear();
         /*rendering */
-        m_FrameBuffer->Begin(m_SceneWidth,m_SceneHeight);
         m_Gui.Begin();
-        m_Gui.Update(m_SceneWidth,m_SceneHeight,m_FrameBuffer->GetRenderTexture());	
+        m_Gui.Update(m_FrameBuffer->GetRenderTexture());	
         m_Gui.End();
         m_Renderer.BeginScene();
-        m_Renderer.Submit(m_VertexArray);
+        m_Renderer.Submit(m_VertexArray,m_FrameBuffer);
         m_Renderer.EndScene();
-        m_FrameBuffer->End();
         glfwSwapBuffers(m_Window);
         glfwPollEvents();
-        // ResizeWindow();
-        // shader.Bind();
-        // {
-        
-        // }
-        // {
-        // 	glm::mat4 model = glm::translate(glm::mat4(1.0f),translationB);
-        // 	glm::mat4 mvp = projection * view * model;
-        // 	shader.SetUniform<glm::mat4>("u_ModelViewProjection",mvp);
-        // 	renderer.Draw(va,ib,shader);
-        // }
-        
-
-        /*end rendering */
 
     }
 }
@@ -133,7 +116,7 @@ void Application::ResizeWindow(){
         // glfwGetWindowSize(m_Window, &m_Width, &m_Height);
         // glfwSetWindowAspectRatio(m_Window,4,3);
         // m_Shader.Bind();
-        // glm::mat4 projection = glm::ortho(-2.0f,2.0f,-1.5f,1.5f,-1.0f,1.0f);
+        // glm::mat4 projection = glm::ortho(-2.0f,2.0f,150.0f,150.0f,-1.0f,1.0f);
         // glm::mat4 view = glm::translate(glm::mat4(1.0f), glm::vec3(0.0,0.0,0.0));
         // glm::mat4 model = glm::translate(glm::mat4(1.0f),glm::vec3(0,0,0));
         // glm::mat4 mvp = projection * view * model;
