@@ -1,6 +1,8 @@
 #pragma once
+#include <memory>
 #include <vector>
 #include <GL/glew.h>
+
 struct VertexBufferElement
 {
     unsigned int type;
@@ -59,4 +61,47 @@ inline void VertexBufferLayout::Push<unsigned char>(unsigned int count)
     m_Elements.push_back(vbe);
     m_Stride += VertexBufferElement::GetSizeOfType(GL_UNSIGNED_BYTE)* count;
 }
+
+
+
+class VertexBuffer
+{
+    private:
+        unsigned int m_RedererID;
+        VertexBufferLayout m_Layout;
+
+    public:
+        VertexBuffer(const void* data, unsigned int size);
+        ~VertexBuffer();
+    
+        void Bind() const;
+        void Unbind() const;
+        void SetLayout(const VertexBufferLayout& layout);
+        inline VertexBufferLayout GetLayout(){return m_Layout;}
+        static inline VertexBuffer* Create(const void* data, unsigned int size)
+        {
+            return new VertexBuffer(data,size);
+        } 
+
+};
+
+class IndexBuffer
+{
+    private:
+        unsigned int m_RedererID;
+        unsigned int m_Count;
+
+    public:
+        IndexBuffer(const unsigned int* data, unsigned int count);
+        ~IndexBuffer();
+    
+    void Bind() const;
+    void Unbind() const;
+    inline unsigned int GetCount() const {return m_Count;}
+    static inline IndexBuffer* Create(const unsigned int* data, unsigned int count)
+    {
+        return new IndexBuffer(data,count);
+    }
+};
+
 

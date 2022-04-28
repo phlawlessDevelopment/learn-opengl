@@ -12,5 +12,7 @@ class Gui
     public:
         Gui(GLFWwindow* window);
         ~Gui();
-        void Render();
+        void Begin();
+        void End();
+        void Update();
 };

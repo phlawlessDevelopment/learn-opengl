@@ -1,8 +1,7 @@
 #pragma once
 #include <memory>
 #include <vector>
-#include "VertexBuffer.h"
-#include "IndexBuffer.h"
+#include "Buffer.h"
 #include "VertexArray.h"
 #include "Shader.h"
 #include "Texture.h"

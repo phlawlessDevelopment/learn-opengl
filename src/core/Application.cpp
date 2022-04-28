@@ -5,8 +5,9 @@
 Application::Application()
     :m_Window(nullptr), m_Gui(m_Window), m_Renderer(),
     m_Width(0), m_Height(0),
-    m_Shader(nullptr), m_VertexArray(nullptr),
-    m_VertexBuffer(nullptr), m_IndexBuffer(nullptr)
+    m_Shader(), m_VertexArray(nullptr),
+    m_VertexBuffer(nullptr), m_IndexBuffer(nullptr),
+    m_Camera(-2.0f,2.0f,-1.5f,1.5f)
 {
     
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE); // tells glfw to use modern opengl
@@ -31,17 +32,15 @@ Application::Application()
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
 
+    
     m_Gui = Gui(m_Window);
+    std::shared_ptr<VertexBuffer> m_VertexBuffer;
+    std::shared_ptr<IndexBuffer> m_IndexBuffer;
+    std::shared_ptr<VertexArray> m_VertexArray;
 
+    Shader m_Shader("../shaders/Basic.shader");
 }
-Application::Application(Application& a)
-    :m_Window(a.m_Window), m_Gui(a.m_Window), m_Renderer(),
-    m_Width(0), m_Height(0),
-    m_Shader(copy_unique(a.m_Shader)), m_VertexArray(copy_unique(m_VertexArray)),
-    m_VertexBuffer(copy_unique(m_VertexBuffer)), m_IndexBuffer(copy_unique(m_IndexBuffer))
-{
 
-}
 
 Application::~Application()
 {       
@@ -72,44 +71,49 @@ void Application::Run()
     };
 
 
-    m_IndexBuffer.reset(IndexBuffer::Create(indicies,indicesLength));
-    m_VertexArray.reset(VertexArray::Create());
-    m_VertexBuffer.reset(VertexBuffer::Create(positions, positionsLength * sizeof(float)));
-    VertexBufferLayout layout;
+    VertexBufferLayout layout = VertexBufferLayout();
 
     layout.Push<float>(2);
     layout.Push<float>(2);
     layout.Push<float>(4);
-    m_VertexArray -> AddVertexBuffer(std::move(m_VertexBuffer));
-    m_VertexArray->SetIndexBuffer(std::move(m_IndexBuffer));
+
+    m_VertexBuffer.reset(VertexBuffer::Create(positions, positionsLength * sizeof(float)));
+    m_IndexBuffer.reset(IndexBuffer::Create(indicies,indicesLength));
+    m_VertexArray.reset(VertexArray::Create());
+
+    m_VertexBuffer->SetLayout(layout);
+    m_VertexArray -> AddVertexBuffer(m_VertexBuffer);
+    m_VertexArray-> SetIndexBuffer(m_IndexBuffer);
 
 
-    Shader shader("../shaders/Basic.shader");
-    shader.Bind();
-    shader.SetUniform<glm::vec4>("u_Color",glm::vec4(1.0f,1.0f,1.0f,1.0f));
-    Texture texture("../res/textures/dice.png");
-    texture.Bind(0);
-    shader.SetUniform<int>("u_Texture", 0);
-    // 4x3
-    glm::mat4 projection = glm::ortho(-2.0f,2.0f,-1.5f,1.5f,-1.0f,1.0f);
-    // "camera" movement
-    glm::mat4 view = glm::translate(glm::mat4(1.0f), glm::vec3(0.0,0.0,0.0));
-    // object movement
-    glm::mat4 model = glm::translate(glm::mat4(1.0f),glm::vec3(0,0,0));
-    glm::mat4 mvp = projection * view * model;
-    shader.SetUniform<glm::mat4>("u_ModelViewProjection",mvp);
+    
+    // // 4x3
+    // glm::mat4 projection = glm::ortho(-2.0f,2.0f,-1.5f,1.5f,-1.0f,1.0f);
+    // // "camera" movement
+    // glm::mat4 view = glm::translate(glm::mat4(1.0f), glm::vec3(0.0,0.0,0.0));
+    // // object movement
+    // glm::mat4 model = glm::translate(glm::mat4(1.0f),glm::vec3(0,0,0));
+    // glm::mat4 mvp = projection * view * model;
 
     while (!glfwWindowShouldClose(m_Window))
     {	
+        m_Shader.Bind();
+        Texture texture("../res/textures/dice.png");
+        texture.Bind(0);
+        m_Shader.SetUniform<glm::vec4>("u_Color",glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
+        m_Shader.SetUniform<int>("u_Texture", 0);
+        m_Shader.SetUniform<glm::mat4>("u_ViewProjection", m_Camera.GetViewProjectionMatrix());
         m_Renderer.Clear();
         /*rendering */
-        m_Gui.Render();	
+        m_Gui.Begin();
+        m_Gui.Update();	
+        m_Gui.End();
         m_Renderer.BeginScene();
-        m_Renderer.Submit(std::move(m_VertexArray));
+        m_Renderer.Submit(m_VertexArray);
         m_Renderer.EndScene();
         glfwSwapBuffers(m_Window);
         glfwPollEvents();
-        
+        // ResizeWindow();
         // shader.Bind();
         // {
         
@@ -125,4 +129,15 @@ void Application::Run()
         /*end rendering */
 
     }
+}
+void Application::ResizeWindow(){
+        // glfwGetWindowSize(m_Window, &m_Width, &m_Height);
+        // glfwSetWindowAspectRatio(m_Window,4,3);
+        // m_Shader.Bind();
+        // glm::mat4 projection = glm::ortho(-2.0f,2.0f,-1.5f,1.5f,-1.0f,1.0f);
+        // glm::mat4 view = glm::translate(glm::mat4(1.0f), glm::vec3(0.0,0.0,0.0));
+        // glm::mat4 model = glm::translate(glm::mat4(1.0f),glm::vec3(0,0,0));
+        // glm::mat4 mvp = projection * view * model;
+        // m_Shader.SetUniform<glm::mat4>("u_ModelViewProjection",mvp);
+        
 }

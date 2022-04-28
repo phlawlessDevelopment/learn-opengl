@@ -7,43 +7,54 @@ Gui::Gui(GLFWwindow* window)
 {
 	if(window == nullptr)
 		return;
-
+	glfwGetWindowSize(m_window, &m_Width, &m_Height);
 	ImGui::CreateContext();
 	ImGuiIO& io = ImGui::GetIO(); (void)io;
 	io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;       // Enable Keyboard Controls
 	io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;           // Enable Docking
-	// io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;         // Enable Multi-Viewport / Platform Windows
-	ImGui_ImplGlfw_InitForOpenGL(m_window,true);
-	ImGui_ImplOpenGL3_Init();
+	io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;         // Enable Multi-Viewport / Platform Windows
+	ImGui_ImplGlfw_InitForOpenGL(m_window, true);
+	ImGui_ImplOpenGL3_Init("#version 460");
 	ImGui::StyleColorsDark();	
-
-}
+	
+	}
 Gui::~Gui()
 {
 
 }
-void Gui::Render()
+ void Gui::Begin()
+ {
+	ImGui_ImplOpenGL3_NewFrame();
+	ImGui_ImplGlfw_NewFrame();
+	ImGui::NewFrame();
+ }
+void Gui::End()
+{
+	ImGuiIO& io = ImGui::GetIO(); (void)io;
+	ImGui::Render();
+	ImGui::Render();
+	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+	// GLFWwindow* backup_current_context = glfwGetCurrentContext();
+	// ImGui::UpdatePlatformWindows();
+	// ImGui::RenderPlatformWindowsDefault();
+	// glfwMakeContextCurrent(backup_current_context);
+}
+void Gui::Update()
 {
 		ResizeUI();
-    	ImGui_ImplOpenGL3_NewFrame();
-		ImGui_ImplGlfw_NewFrame();
-		ImGui::NewFrame();
-		static ImGuiDockNodeFlags dockspace_flags = ImGuiDockNodeFlags_None;
-		ImGuiWindowFlags window_flags = ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoDocking;
-		ImGuiViewport* viewport = ImGui::GetMainViewport();
-		ImGui::SetNextWindowPos(viewport->Pos);
-		ImGui::SetNextWindowSize(viewport->Size);
-		ImGui::SetNextWindowViewport(viewport->ID);
-		window_flags |= ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove;
-		window_flags |= ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus;
-
-		ImGui::Begin("win");
+		ImGuiID dock_id = ImGui::DockSpaceOverViewport(ImGui::GetMainViewport());
+		ImGui::SetNextWindowDockID(dock_id);
+		ImGui::Begin("Scene");
 		ImGui::End();
-		ImGui::Begin("win 2");
+		ImGui::Begin("Tree");
 		ImGui::End();
-
-		ImGui::Render();
-		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+		ImGui::Begin("Files");
+		ImGui::End();
+		ImGui::Begin("Tools");
+		ImGui::End();
+		ImGui::Begin("Props");
+		ImGui::End();
+		
 }
 void Gui::ResizeUI()
 {

@@ -20,6 +20,7 @@ class Shader
         std::unordered_map<std::string,int> m_uniformLocationCache;
     public:
         Shader(const std::string& filepath);
+        Shader();
         ~Shader();
         void Bind() const;
         void Unbind() const;

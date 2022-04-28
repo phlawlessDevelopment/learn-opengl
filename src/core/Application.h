@@ -11,11 +11,12 @@
 #include "gui/Gui.h"
 #include "renderer/Renderer.h"
 
-#include "VertexBuffer.h"
-#include "IndexBuffer.h"
+#include "Buffer.h"
 #include "VertexArray.h"
 #include "Shader.h"
 #include "Texture.h"
+#include "Camera.h"
+
 
 
 class Application
@@ -24,12 +25,13 @@ class Application
         Renderer m_Renderer;
         Gui m_Gui;
         GLFWwindow* m_Window;
-        unsigned int m_Width, m_Height;
-        std::unique_ptr<Shader> m_Shader;
-        std::unique_ptr<VertexArray> m_VertexArray;
-        std::unique_ptr<VertexBuffer> m_VertexBuffer;
-        std::unique_ptr<IndexBuffer> m_IndexBuffer;
-        
+        int m_Width, m_Height;
+        Shader m_Shader;
+        OrthographicCamera m_Camera;
+        std::shared_ptr<VertexArray> m_VertexArray;
+        std::shared_ptr<VertexBuffer> m_VertexBuffer;
+        std::shared_ptr<IndexBuffer> m_IndexBuffer;
+        void ResizeWindow();
     public:
         Application();
         Application(Application& a);

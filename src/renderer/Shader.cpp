@@ -14,6 +14,11 @@ Shader::Shader(const std::string& filepath)
     ShaderProgramSource source = ParseShader(filepath);
 	m_RendererID = CreateShader(source.VertexSource,source.FragmentSource);
 }
+
+Shader::Shader()
+    :m_Filepath(""), m_RendererID(0)
+{
+}
 Shader::~Shader()
 {
     glDeleteProgram(m_RendererID);
@@ -98,7 +103,7 @@ int Shader::GetUniformLocation(const std::string& name)
 {
     if(m_uniformLocationCache.find(name)!= m_uniformLocationCache.end())
         return  m_uniformLocationCache[name];
-    int location = glGetUniformLocation(m_RendererID,name.c_str());
+    int location = glGetUniformLocation(m_RendererID, name.c_str());
     if(location==-1)
         std::cout<< "Warning: uniform " << name << " doesn't exist" << std::endl;
     m_uniformLocationCache[name] = location;

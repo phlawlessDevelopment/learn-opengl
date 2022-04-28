@@ -39,5 +39,5 @@ void Renderer::Flush()
 void Renderer::DrawIndexed(const std::shared_ptr<VertexArray>& va)
 {		
 		va->Bind();
-		glDrawElements(GL_TRIANGLES, va->GetIndexBuffer().GetCount(), GL_UNSIGNED_INT,nullptr);
+		glDrawElements(GL_TRIANGLES, va->GetIndexBuffer()->GetCount(), GL_UNSIGNED_INT,nullptr);
 }
