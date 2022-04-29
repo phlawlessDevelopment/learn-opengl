@@ -69,25 +69,7 @@ void FrameBuffer::Invalidate(uint32_t width, uint32_t height)
     
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, m_ColorAttachemnt, 0);
     glBindFramebuffer(GL_FRAMEBUFFER,0);
-
-    
-    // glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-    // glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE); 
-
-    // glGenTextures(1, &m_RenderTexID);
-    // glBindTexture(GL_TEXTURE_2D, m_RenderTexID);
-
-
-
-
-    // // Set the list of draw buffers.
-    // GLenum DrawBuffers[1] = {GL_COLOR_ATTACHMENT0};
-    // glDrawBuffers(1, DrawBuffers);
-    // glBindFramebuffer(GL_FRAMEBUFFER,0);
-    // glGenRenderbuffers(1, &m_RenderBuffer);
-    // glBindRenderbuffer(GL_RENDERBUFFER, m_RenderBuffer);
-    // glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, 640, 480);
-    // glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, m_RenderBuffer);
+    glBindTexture(GL_TEXTURE_2D, 0);
 
     if(glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
         std::cout << "frame buffer error " << glCheckFramebufferStatus(GL_FRAMEBUFFER) << std::endl;

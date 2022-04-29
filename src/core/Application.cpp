@@ -54,7 +54,7 @@ void Application::Run()
         /* temp stuf */
         const unsigned int positionsLength = 64;
         float positions[positionsLength]= {
-           -1.5f, -0.5f, 0.0f, 0.0f, 0.18f, 0.6f,0.96f,1.0f,
+           -1.5f, -0.5f,  0.0f, 0.0f,  0.18f, 0.6f,0.96f,1.0f,
             -0.5f, -0.5f, 1.0f, 0.0f, 0.18f, 0.6f,0.96f,1.0f,
             -0.5f, 0.5f, 1.0f, 1.0f, 0.18f, 0.6f,0.96f,1.0f,
             -1.5f, 0.5f,0.0f, 1.0f, 0.18f, 0.6f,0.96f,1.0f,
@@ -90,23 +90,30 @@ void Application::Run()
     m_VertexBuffer -> SetLayout(layout);
     m_VertexArray -> AddVertexBuffer(m_VertexBuffer);
     m_VertexArray -> SetIndexBuffer(m_IndexBuffer);
+    
     Shader m_Shader("../shaders/Basic.shader");
-    Texture texture("../res/textures/dice.png");
-    texture.Bind(0);
     m_Shader.Bind();
-    // m_Shader.SetUniform<int>("u_Texture", 0);
-    // m_Shader.SetUniform<glm::mat4>("u_ViewProjection", m_Camera.GetViewProjectionMatrix());
+    
+    Texture texture("../res/textures/dice.png");
     
     while (!glfwWindowShouldClose(m_Window))
     {	
     
         m_Renderer.Clear();
         /*rendering */
+        
         m_FrameBuffer->Bind();
+
+        /*todo fix? */
+        texture.Bind(1);
+        m_Shader.SetUniform<int>("u_Texture", 1);
+        m_Shader.SetUniform<glm::mat4>("u_ViewProjection", m_Camera.GetViewProjectionMatrix());
+    
         m_Renderer.BeginScene();
         m_Renderer.Submit(m_VertexArray);
         m_Renderer.EndScene();
         m_FrameBuffer->Unbind();
+
         m_Gui.Begin();
         m_Gui.Update();
         m_Gui.End();
@@ -115,15 +122,4 @@ void Application::Run()
         glfwPollEvents();
 
     }
-}
-void Application::ResizeWindow(){
-        // glfwGetWindowSize(m_Window, &m_Width, &m_Height);
-        // glfwSetWindowAspectRatio(m_Window,4,3);
-        // m_Shader.Bind();
-        // glm::mat4 projection = glm::ortho(-2.0f,2.0f,150.0f,150.0f,-1.0f,1.0f);
-        // glm::mat4 view = glm::translate(glm::mat4(1.0f), glm::vec3(0.0,0.0,0.0));
-        // glm::mat4 model = glm::translate(glm::mat4(1.0f),glm::vec3(0,0,0));
-        // glm::mat4 mvp = projection * view * model;
-        // m_Shader.SetUniform<glm::mat4>("u_ModelViewProjection",mvp);
-        
 }

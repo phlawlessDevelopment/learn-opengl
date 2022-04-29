@@ -32,7 +32,6 @@ class Application
         std::shared_ptr<IndexBuffer> m_IndexBuffer;
         std::shared_ptr<FrameBuffer> m_FrameBuffer;
         Shader m_Shader;
-        void ResizeWindow();
     public:
         Application();
         // Application(Application& a);

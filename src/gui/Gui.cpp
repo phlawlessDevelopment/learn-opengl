@@ -40,8 +40,6 @@ void Gui::Update()
 		// ResizeUI();
 		ImGuiID dock_id = ImGui::DockSpaceOverViewport(ImGui::GetMainViewport());
 		ImGui::SetNextWindowDockID(dock_id);
-		// m_FrameBuffer->Bind();
-		// ImGui::SetNextWindowSize(ImVec2(640,480));
 		ImGui::Begin("Scene");
 		ImVec2 sceneSize = ImGui::GetWindowSize();
 
