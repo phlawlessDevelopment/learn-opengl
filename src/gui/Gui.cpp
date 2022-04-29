@@ -1,13 +1,14 @@
 #include <iostream>
+#include <memory>
 #include "Gui.h"
 
-Gui::Gui(GLFWwindow* window)
-	:m_Width(0),m_Height(0),
-	m_window(window)
+Gui::Gui(GLFWwindow* window, std::shared_ptr<FrameBuffer>& fb)
+	:m_window(window),m_FrameBuffer(fb)
 {
 	if(window == nullptr)
 		return;
-	glfwGetWindowSize(m_window, &m_Width, &m_Height);
+	m_FrameBuffer = fb;
+	// glfwGetWindowSize(m_window, &m_Width, &m_Height);
 	ImGui::CreateContext();
 	ImGuiIO& io = ImGui::GetIO(); (void)io;
 	io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;       // Enable Keyboard Controls
@@ -32,16 +33,24 @@ void Gui::End()
 {
 	ImGuiIO& io = ImGui::GetIO(); (void)io;
 	ImGui::Render();
-	ImGui::Render();
 	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 }
-void Gui::Update(const unsigned int renderTexID)
-{
-		ResizeUI();
+void Gui::Update()
+{	
+		// ResizeUI();
 		ImGuiID dock_id = ImGui::DockSpaceOverViewport(ImGui::GetMainViewport());
 		ImGui::SetNextWindowDockID(dock_id);
+		// m_FrameBuffer->Bind();
+		// ImGui::SetNextWindowSize(ImVec2(640,480));
 		ImGui::Begin("Scene");
-		ImGui::Image((ImTextureID)renderTexID, ImGui::GetWindowSize(), ImVec2(0, 1), ImVec2(1, 0));
+		ImVec2 sceneSize = ImGui::GetWindowSize();
+
+		if(sceneSize.x != m_SceneSize.x || sceneSize.y != m_SceneSize.y)
+		{
+			m_FrameBuffer->Invalidate(sceneSize.x,sceneSize.y);
+		}
+		m_SceneSize = sceneSize;
+		ImGui::Image((void*)m_FrameBuffer->GetColorAttachment(), ImGui::GetWindowSize());
 		ImGui::End();
 		ImGui::Begin("Tree");
 		ImGui::End();
@@ -51,9 +60,10 @@ void Gui::Update(const unsigned int renderTexID)
 		ImGui::End();
 		ImGui::Begin("Props");
 		ImGui::End();
+	// m_FrameBuffer->Unbind();
 		
 }
-void Gui::ResizeUI()
-{
-	glfwGetWindowSize(m_window, &m_Width, &m_Height);
-}
+// void Gui::ResizeUI()
+// {
+// 	glfwGetWindowSize(m_window, &m_Width, &m_Height);
+// }

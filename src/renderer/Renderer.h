@@ -19,7 +19,7 @@ class Renderer
 
         void BeginScene();
         
-        void Submit(const std::shared_ptr<VertexArray>& va ,std::shared_ptr<FrameBuffer> fb);
+        void Submit(const std::shared_ptr<VertexArray>& va);
         void EndScene();
         void Flush();
 

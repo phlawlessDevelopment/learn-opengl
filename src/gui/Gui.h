@@ -1,3 +1,4 @@
+#include "Buffer.h"
 #include <GLFW/glfw3.h>
 #include "vendor/imgui/imgui.h"
 #include "vendor/imgui/imgui_impl_glfw.h"
@@ -7,14 +8,15 @@ class Gui
 {
     private:
         GLFWwindow* m_window;
-        int m_Width, m_Height;
+        ImVec2 m_SceneSize;
+        std::shared_ptr<FrameBuffer> m_FrameBuffer;
         void ResizeUI();
         void CalculateSceneSize();
     public:
-        Gui(GLFWwindow* window);
+        Gui(GLFWwindow* window, std::shared_ptr<FrameBuffer>& fb);
         ~Gui();
         void Begin();
         void End();
-        void Update(const unsigned int renderTexID);
+        void Update();
 
 };

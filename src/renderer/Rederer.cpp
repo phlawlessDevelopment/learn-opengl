@@ -17,17 +17,16 @@ void Renderer::Clear() const
 }
 void Renderer::ClearColor(const glm::vec4& color) const
 {
-		glClearColor(color.r,color.g,color.b,color.a);
+	glClearColor(color.r,color.g,color.b,color.a);
 }
 
 void Renderer::BeginScene()
 {
 
 }
-void Renderer::Submit(const std::shared_ptr<VertexArray>& va ,std::shared_ptr<FrameBuffer> fb)
-{	fb->Bind();
+void Renderer::Submit(const std::shared_ptr<VertexArray>& va)
+{
 	DrawIndexed(va);
-	fb->Unbind();
 }
 void Renderer::EndScene()
 {

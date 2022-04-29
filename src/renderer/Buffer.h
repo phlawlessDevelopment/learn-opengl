@@ -108,16 +108,17 @@ class FrameBuffer
 {
     private:
         unsigned int m_RedererID;
-        unsigned int m_RenderTexID;
+        unsigned int m_ColorAttachemnt;
         unsigned int m_RenderBuffer;
         
     public:
-        FrameBuffer(const int width,const int height);
+        FrameBuffer(uint32_t width, uint32_t height);
         ~FrameBuffer();
     
+    void Invalidate(uint32_t width, uint32_t height);
     void Bind() const;
     void Unbind() const;
-    inline unsigned int GetRenderTexture() const {return m_RenderTexID;}
+    inline unsigned int GetColorAttachment() const {return m_ColorAttachemnt;}
     static inline FrameBuffer* Create(const int width,const int height)
     {
         return new FrameBuffer(width,height);

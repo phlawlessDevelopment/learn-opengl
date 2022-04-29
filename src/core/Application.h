@@ -35,7 +35,7 @@ class Application
         void ResizeWindow();
     public:
         Application();
-        Application(Application& a);
+        // Application(Application& a);
         ~Application();
         void Run();
 

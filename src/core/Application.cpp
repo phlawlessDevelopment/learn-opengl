@@ -1,10 +1,11 @@
 
 #include <memory>
+#include <iostream>
 #include "Application.h"
 
 Application::Application()
-    :m_Window(nullptr), m_Gui(m_Window), m_Renderer(),
-    m_Width(1024), m_Height(768),
+    :m_Window(nullptr), m_Gui(m_Window,m_FrameBuffer), m_Renderer(),
+    m_Width(800), m_Height(600),
     m_Shader(), m_VertexArray(nullptr),
     m_VertexBuffer(nullptr), m_IndexBuffer(nullptr),
     m_Camera(-2.0f,2.0f,-1.5f,1.5f)
@@ -33,12 +34,11 @@ Application::Application()
     glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
 
     
-    m_Gui = Gui(m_Window);
-    std::shared_ptr<VertexBuffer> m_VertexBuffer;
+    std::shared_ptr<FrameBuffer> m_FrameBuffer;
     std::shared_ptr<IndexBuffer> m_IndexBuffer;
     std::shared_ptr<VertexArray> m_VertexArray;
-    std::shared_ptr<FrameBuffer> m_FrameBuffer;
-
+    std::shared_ptr<VertexBuffer> m_VertexBuffer;
+    m_Camera = OrthographicCamera(-2.0f,2.0f,-1.5f,1.5f);
     
 }
 
@@ -84,6 +84,7 @@ void Application::Run()
     m_SceneWidth = 640;
     m_SceneHeight = 480;
     m_FrameBuffer.reset(FrameBuffer::Create(m_SceneWidth,m_SceneHeight));
+    m_Gui = Gui(m_Window,m_FrameBuffer);
     
 
     m_VertexBuffer -> SetLayout(layout);
@@ -93,20 +94,23 @@ void Application::Run()
     Texture texture("../res/textures/dice.png");
     texture.Bind(0);
     m_Shader.Bind();
-    m_Shader.SetUniform<int>("u_Texture", 0);
-    m_Shader.SetUniform<glm::mat4>("u_ViewProjection", m_Camera.GetViewProjectionMatrix());
+    // m_Shader.SetUniform<int>("u_Texture", 0);
+    // m_Shader.SetUniform<glm::mat4>("u_ViewProjection", m_Camera.GetViewProjectionMatrix());
     
     while (!glfwWindowShouldClose(m_Window))
     {	
     
         m_Renderer.Clear();
         /*rendering */
-        m_Gui.Begin();
-        m_Gui.Update(m_FrameBuffer->GetRenderTexture());	
-        m_Gui.End();
+        m_FrameBuffer->Bind();
         m_Renderer.BeginScene();
-        m_Renderer.Submit(m_VertexArray,m_FrameBuffer);
+        m_Renderer.Submit(m_VertexArray);
         m_Renderer.EndScene();
+        m_FrameBuffer->Unbind();
+        m_Gui.Begin();
+        m_Gui.Update();
+        m_Gui.End();
+        
         glfwSwapBuffers(m_Window);
         glfwPollEvents();
 
