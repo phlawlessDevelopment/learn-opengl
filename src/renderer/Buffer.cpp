@@ -7,7 +7,10 @@ VertexBuffer::VertexBuffer(const void* data, unsigned int size)
     glBindBuffer(GL_ARRAY_BUFFER, m_RedererID);
     glBufferData(GL_ARRAY_BUFFER, size, data, GL_DYNAMIC_DRAW);
 }
-VertexBuffer::~VertexBuffer()
+VertexBuffer::~VertexBuffer(){
+    std::cout << "vb destroyed" << std::endl;
+}
+void VertexBuffer::Delete() const
 {
     glDeleteBuffers(1,&m_RedererID);
 }
@@ -26,7 +29,6 @@ void VertexBuffer::Unbind() const
 }
 
 IndexBuffer::IndexBuffer(const unsigned int* data, unsigned int count)
-    :m_Count(count)
 {
    	glGenBuffers(1, &m_RedererID);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_RedererID);
@@ -34,7 +36,9 @@ IndexBuffer::IndexBuffer(const unsigned int* data, unsigned int count)
 }
 IndexBuffer::~IndexBuffer()
 {
-    glDeleteBuffers(1,&m_RedererID);
+    std::cout << "ib destroyed" << std::endl;
+
+    // glDeleteBuffers(1,&m_RedererID);
 }
     
 void IndexBuffer::Bind()const
@@ -53,7 +57,7 @@ FrameBuffer::FrameBuffer(uint32_t width, uint32_t height)
 }
 FrameBuffer::~FrameBuffer()
 {
-
+    std::cout << "fb destroyed" << std::endl;
 }
 void FrameBuffer::Invalidate(uint32_t width, uint32_t height)
 {

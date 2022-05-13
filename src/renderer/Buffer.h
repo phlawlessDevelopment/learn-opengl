@@ -76,12 +76,9 @@ class VertexBuffer
     
         void Bind() const;
         void Unbind() const;
+        void Delete() const;
         void SetLayout(const VertexBufferLayout& layout);
         inline VertexBufferLayout GetLayout(){return m_Layout;}
-        static inline VertexBuffer* Create(const void* data, unsigned int size)
-        {
-            return new VertexBuffer(data,size);
-        } 
 
 };
 
@@ -89,7 +86,6 @@ class IndexBuffer
 {
     private:
         unsigned int m_RedererID;
-        unsigned int m_Count;
 
     public:
         IndexBuffer(const unsigned int* data, unsigned int count);
@@ -97,11 +93,6 @@ class IndexBuffer
     
     void Bind() const;
     void Unbind() const;
-    inline unsigned int GetCount() const {return m_Count;}
-    static inline IndexBuffer* Create(const unsigned int* data, unsigned int count)
-    {
-        return new IndexBuffer(data,count);
-    }
 };
 
 class FrameBuffer

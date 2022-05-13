@@ -19,12 +19,11 @@ class Renderer
 
         void BeginScene();
         
-        void Submit(const std::shared_ptr<VertexArray>& va);
         void EndScene();
         void Flush();
 
         void Clear() const;
         void ClearColor(const glm::vec4& color) const;
-        void DrawIndexed(const std::shared_ptr<VertexArray>& va);
+        void Draw(const VertexArray& va);
 
 };

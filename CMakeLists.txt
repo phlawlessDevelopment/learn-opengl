@@ -14,6 +14,7 @@ include_directories(
         ${PROJECT_SOURCE_DIR}/src/core
         ${PROJECT_SOURCE_DIR}/src/renderer
         ${PROJECT_SOURCE_DIR}/src/gui
+        ${PROJECT_SOURCE_DIR}/src/scene
         ${PROJECT_SOURCE_DIR}/src
         ${GLEW_INCLUDE_DIRS}
         )
@@ -27,6 +28,7 @@ file(GLOB all_SRCS
 "${PROJECT_SOURCE_DIR}/src/renderer/*.cpp"
 "${PROJECT_SOURCE_DIR}/src/gui/*.cpp"
 "${PROJECT_SOURCE_DIR}/src/core/*.cpp"
+"${PROJECT_SOURCE_DIR}/src/scene/*.cpp"
 "${PROJECT_SOURCE_DIR}/src/vendor/stb/*.cpp"
 "${PROJECT_SOURCE_DIR}/src/vendor/stb/*.c"
 "${PROJECT_SOURCE_DIR}/src/vendor/imgui/*.cpp"

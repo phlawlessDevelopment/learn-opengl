@@ -1,4 +1,4 @@
-# Install script for directory: /home/phalyce/dev/engine/src/vendor/glm
+# Install script for directory: /home/phalyce/dev/cpp_/engine/src/vendor/glm
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)

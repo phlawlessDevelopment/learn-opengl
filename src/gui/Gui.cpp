@@ -2,12 +2,9 @@
 #include <memory>
 #include "Gui.h"
 
-Gui::Gui(GLFWwindow* window, std::shared_ptr<FrameBuffer>& fb)
-	:m_window(window),m_FrameBuffer(fb)
+Gui::Gui(GLFWwindow* window)
+	:m_window(window)
 {
-	if(window == nullptr)
-		return;
-	m_FrameBuffer = fb;
 	// glfwGetWindowSize(m_window, &m_Width, &m_Height);
 	ImGui::CreateContext();
 	ImGuiIO& io = ImGui::GetIO(); (void)io;
@@ -35,9 +32,8 @@ void Gui::End()
 	ImGui::Render();
 	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 }
-void Gui::Update()
+void Gui::Update(FrameBuffer& fb,std::vector<std::reference_wrapper<glm::vec3&>>& transforms)
 {	
-		// ResizeUI();
 		ImGuiID dock_id = ImGui::DockSpaceOverViewport(ImGui::GetMainViewport());
 		ImGui::SetNextWindowDockID(dock_id);
 		ImGui::Begin("Scene");
@@ -45,10 +41,10 @@ void Gui::Update()
 
 		if(sceneSize.x != m_SceneSize.x || sceneSize.y != m_SceneSize.y)
 		{
-			m_FrameBuffer->Invalidate(sceneSize.x,sceneSize.y);
+			fb.Invalidate(sceneSize.x,sceneSize.y);
 		}
 		m_SceneSize = sceneSize;
-		ImGui::Image((void*)m_FrameBuffer->GetColorAttachment(), ImGui::GetWindowSize());
+		ImGui::Image((void*)fb.GetColorAttachment(), ImGui::GetWindowSize());
 		ImGui::End();
 		ImGui::Begin("Tree");
 		ImGui::End();
@@ -57,11 +53,12 @@ void Gui::Update()
 		ImGui::Begin("Tools");
 		ImGui::End();
 		ImGui::Begin("Props");
+		for (auto &transform : transforms)
+		{
+			ImGui::SliderFloat3("sprite1", &transform.get().x,0.0f,10.0f);
+		}
+		
 		ImGui::End();
-	// m_FrameBuffer->Unbind();
 		
 }
-// void Gui::ResizeUI()
-// {
-// 	glfwGetWindowSize(m_window, &m_Width, &m_Height);
-// }
+

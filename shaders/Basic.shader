@@ -3,18 +3,15 @@
 
 layout(location = 0) in vec4 a_Position;
 layout(location = 1) in vec2 a_TexCoords;
-layout(location = 2) in vec4 a_Color;
 
 out vec2 v_TexCoords;
-out vec4 v_Color;
 
-uniform mat4 u_ViewProjection;
+uniform mat4 u_ModelViewProjection;
 
 void main()
 {
     v_TexCoords = a_TexCoords;
-    v_Color = a_Color;
-    gl_Position = u_ViewProjection * a_Position;
+    gl_Position = u_ModelViewProjection * a_Position;
 };
 
 #shader fragment
@@ -31,5 +28,5 @@ void main()
 {
     vec4 texColor = texture(u_Texture,v_TexCoords);
     // FragColor =  v_Color;
-    FragColor = texColor * v_Color;
+    FragColor = texColor;
 };

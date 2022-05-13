@@ -24,9 +24,10 @@ void Renderer::BeginScene()
 {
 
 }
-void Renderer::Submit(const std::shared_ptr<VertexArray>& va)
+void Renderer::Draw(const VertexArray& va)
 {
-	DrawIndexed(va);
+		va.Bind();
+		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT,nullptr);
 }
 void Renderer::EndScene()
 {
@@ -36,8 +37,4 @@ void Renderer::Flush()
 {
 	
 }
-void Renderer::DrawIndexed(const std::shared_ptr<VertexArray>& va)
-{		
-		va->Bind();
-		glDrawElements(GL_TRIANGLES, va->GetIndexBuffer()->GetCount(), GL_UNSIGNED_INT,nullptr);
-}
+
