@@ -1,9 +1,13 @@
 #include "Camera.h"
 OrthographicCamera::OrthographicCamera(float left,float right, float top, float bottom)
     :m_ProjectionMatrix(glm::ortho(left,right,bottom,top,-1.0f,1.0f)),
-    m_Position(glm::vec3(0,0,0))
+     m_Position(glm::vec3(0,0,0))
 {
     RecalculateViewMatrix();
+}
+void OrthographicCamera::UpdateProjectionMatrix(float left,float right, float top, float bottom)
+{
+    m_ProjectionMatrix = glm::ortho(left,right,bottom,top,-1.0f,1.0f);
 }
 void OrthographicCamera::RecalculateViewMatrix()
 {

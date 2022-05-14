@@ -10,11 +10,9 @@ class Gui
 {
     private:
         GLFWwindow* m_window;
-        ImVec2 m_SceneSize;
         // FrameBuffer m_FrameBuffer;
-        void ResizeUI();
-        void CalculateSceneSize();
     public:
+        ImVec2 m_SceneSize;
         Gui(GLFWwindow* window);
         ~Gui();
         void Begin();

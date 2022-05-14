@@ -19,6 +19,8 @@
 #include "Node.h"
 
 double mouseX, mouseY = 0.0;
+float sceneWidth = 640.0f;
+float sceneHeight = 480.0f;
 
 void mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
 {
@@ -37,7 +39,14 @@ void RenderLoop(GLFWwindow* window,
                 Texture& texture, 
                 std::vector<Sprite>& sprites,
                 std::vector<glm::vec3*>& transforms){
- 
+        
+        
+        if(gui.m_SceneSize.x!=sceneWidth || gui.m_SceneSize.y!= sceneHeight){
+            camera.UpdateProjectionMatrix(0.0f,gui.m_SceneSize.x,gui.m_SceneSize.y,0.0f);
+        }
+        sceneWidth = gui.m_SceneSize.x;
+        sceneHeight = gui.m_SceneSize.y;
+
         renderer.Clear();
         texture.Bind(1);
         fb.Bind();
@@ -75,7 +84,6 @@ int main()
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6); // opengl 4.6
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE); // tells glfw to use modern opengl
 
-    
 	GLFWwindow* window = glfwCreateWindow(800, 600, "phlawlessEngine", NULL, NULL);
 	if (window == NULL)
     {
@@ -97,13 +105,13 @@ int main()
     OrthographicCamera camera = OrthographicCamera(0.0f,10.0f,10.0f,0.0f);
 	std::vector<Sprite> sprites {Sprite(), Sprite()};
     std::vector<glm::vec3*> transforms;
+
     for (auto &&sprite : sprites)
     {
         transforms.push_back(&sprite.m_Position);
     }   
 
-    int sceneWidth = 640;
-    int sceneHeight = 480;
+    
     FrameBuffer fb = FrameBuffer(sceneWidth,sceneHeight);
 
     Gui gui = Gui(window);
@@ -113,12 +121,11 @@ int main()
     Texture texture("../res/textures/dice.png");
 
 	Renderer renderer = Renderer();
-
-	 while (!glfwWindowShouldClose(window))
+    while (!glfwWindowShouldClose(window))
     {	
-    
 		RenderLoop(window,renderer,camera,gui,fb,shader,texture,sprites, transforms);
 	}
+    
 	ImGui_ImplGlfw_Shutdown();
 	glfwDestroyWindow(window);
 	glfwTerminate();

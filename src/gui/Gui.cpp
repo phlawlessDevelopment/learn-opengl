@@ -38,9 +38,9 @@ void Gui::Update(FrameBuffer& fb,std::vector<glm::vec3*> & transforms)
 		ImGui::SetNextWindowDockID(dock_id);
 		ImGui::Begin("Scene");
 		ImVec2 sceneSize = ImGui::GetWindowSize();
-
 		if(sceneSize.x != m_SceneSize.x || sceneSize.y != m_SceneSize.y)
 		{
+			// std::cout << sceneSize.x <<" , " << sceneSize.y << std::endl;
 			fb.Invalidate(sceneSize.x,sceneSize.y);
 		}
 		m_SceneSize = sceneSize;
@@ -57,7 +57,7 @@ void Gui::Update(FrameBuffer& fb,std::vector<glm::vec3*> & transforms)
 		{
 			// std::cout << "(" << transforms[i]->x <<"," <<transforms[i]->y<<"," <<transforms[i]->z<<")"<<std::endl;
 			ImGui::PushID(i);
-			ImGui::SliderFloat3("sprite", &transforms[i]->x, 0.0f, 5.0f);
+			ImGui::InputFloat3("sprite " + i, &transforms[i]->x);
 			ImGui::PopID();
 		}
 		ImGui::End();
