@@ -28,7 +28,7 @@ void mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
 }
 
 
-void RenderLoop(GLFWwindow* window, Renderer& renderer, OrthographicCamera& camera, Gui& gui, FrameBuffer& fb, Shader& shader, Texture& texture, std::vector<Sprite>& sprites, std::vector<std::reference_wrapper<glm::vec3&>>& transforms){
+void RenderLoop(GLFWwindow* window, Renderer& renderer, OrthographicCamera& camera, Gui& gui, FrameBuffer& fb, Shader& shader, Texture& texture, std::vector<Sprite>& sprites, std::vector<float*> & transforms){
  
         renderer.Clear();
         /*rendering */
@@ -44,8 +44,9 @@ void RenderLoop(GLFWwindow* window, Renderer& renderer, OrthographicCamera& came
 		shader.SetUniform<int>("u_Texture", 1);
         sprite.SetPostion(glm::vec3(mouseX,mouseY,1));
         // std::cout << "(" << sprite.GetPosition().x <<","<<sprite.GetPosition().y<<")" <<std::endl;
-        shader.SetUniform<glm::mat4>("u_ModelViewProjection", camera.GetViewProjectionMatrix() * glm::translate(glm::mat4(1.0f) , sprite.GetPosition()));
-        
+        shader.SetUniform<glm::mat4>("u_ViewMatrix", camera.GetViewMatrix());
+        shader.SetUniform<glm::mat4>("u_ProjectionMatrix", camera.GetProjectionMatrix());
+        shader.SetUniform<glm::mat4>("u_ModelMatrix", glm::translate(glm::mat4(1.0f) , sprite.GetPosition()));
         // shader.SetUniform<glm::mat4>("u_ModelViewProjection", camera.GetViewProjectionMatrix());
         renderer.Draw(sprite.GetVertexArray());
         }
@@ -92,10 +93,12 @@ int main()
     glfwSetMouseButtonCallback(window, mouse_button_callback);
 
     OrthographicCamera camera = OrthographicCamera(0.0f,10.0f,10.0f,0.0f);
-	std::vector<Sprite> sprites;
-    Sprite sprite1 = Sprite();
-    sprites.push_back(sprite1);
-	std::vector<std::reference_wrapper<glm::vec3&>> transforms {sprite1.GetPosition()};
+	std::vector<Sprite> sprites {Sprite(), Sprite()};
+    std::vector<float*> transforms;
+    for (auto &&sprite : sprites)
+    {
+        transforms.push_back(sprite.GetTransform());
+    }
     
     
 
@@ -105,7 +108,6 @@ int main()
 
     Gui gui = Gui(window);
     
-
 	
     Shader shader("../shaders/Basic.shader");
     

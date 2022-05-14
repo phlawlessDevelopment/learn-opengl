@@ -12,6 +12,7 @@ private:
 public:
     inline VertexArray GetVertexArray() {return m_VertexArray;} 
     inline glm::vec3& GetPosition() {return m_Position;}
+    inline float* GetTransform() {return &m_Position.x;}
     void SetPostion(const glm::vec3 newPos);
     Sprite();
     ~Sprite();

@@ -32,7 +32,7 @@ void Gui::End()
 	ImGui::Render();
 	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 }
-void Gui::Update(FrameBuffer& fb,std::vector<std::reference_wrapper<glm::vec3&>>& transforms)
+void Gui::Update(FrameBuffer& fb,std::vector<float*> & transforms)
 {	
 		ImGuiID dock_id = ImGui::DockSpaceOverViewport(ImGui::GetMainViewport());
 		ImGui::SetNextWindowDockID(dock_id);
@@ -53,11 +53,12 @@ void Gui::Update(FrameBuffer& fb,std::vector<std::reference_wrapper<glm::vec3&>>
 		ImGui::Begin("Tools");
 		ImGui::End();
 		ImGui::Begin("Props");
-		for (auto &transform : transforms)
+		for (int n = 0; n < transforms.size(); n++)
 		{
-			ImGui::SliderFloat3("sprite1", &transform.get().x,0.0f,10.0f);
+			ImGui::PushID(n);
+			ImGui::SliderFloat3("sprite", transforms[n], 0.0f, 10.0f);
+			ImGui::PopID();
 		}
-		
 		ImGui::End();
 		
 }
