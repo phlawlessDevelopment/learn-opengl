@@ -4,7 +4,6 @@ OrthographicCamera::OrthographicCamera(float left,float right, float top, float 
     m_Position(glm::vec3(0,0,0))
 {
     RecalculateViewMatrix();
-    // m_ViewProjectionMatrix = m_ProjectionMatrix; //* m_ViewMatrix;
 }
 void OrthographicCamera::RecalculateViewMatrix()
 {

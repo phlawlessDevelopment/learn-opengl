@@ -19,6 +19,6 @@ class Gui
         ~Gui();
         void Begin();
         void End();
-        void Update(FrameBuffer& fb, std::vector<float*>& transforms);
+        void Update(FrameBuffer& fb, std::vector<glm::vec3*>& transforms);
 
 };

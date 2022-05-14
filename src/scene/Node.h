@@ -7,13 +7,10 @@ class Sprite
 {
 private:
     VertexArray m_VertexArray;
-    glm::vec3 m_Position;
     
 public:
+    glm::vec3 m_Position;
     inline VertexArray GetVertexArray() {return m_VertexArray;} 
-    inline glm::vec3& GetPosition() {return m_Position;}
-    inline float* GetTransform() {return &m_Position.x;}
-    void SetPostion(const glm::vec3 newPos);
     Sprite();
     ~Sprite();
 };
@@ -49,8 +46,4 @@ Sprite::Sprite(/* args */)
 
 Sprite::~Sprite()
 {
-}
-
-void Sprite::SetPostion(const glm::vec3 newPos){
-    m_Position = newPos;
 }

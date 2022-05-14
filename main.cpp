@@ -6,6 +6,7 @@
 #include "vendor/glm/glm.hpp"
 #include "vendor/glm/gtc/matrix_transform.hpp"
 
+
 #include "helpers.h"
 #include "Gui.h"
 #include "Renderer.h"
@@ -28,28 +29,29 @@ void mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
 }
 
 
-void RenderLoop(GLFWwindow* window, Renderer& renderer, OrthographicCamera& camera, Gui& gui, FrameBuffer& fb, Shader& shader, Texture& texture, std::vector<Sprite>& sprites, std::vector<float*> & transforms){
+void RenderLoop(GLFWwindow* window, 
+                Renderer& renderer,
+                OrthographicCamera& camera,
+                Gui& gui, FrameBuffer& fb,
+                Shader& shader,
+                Texture& texture, 
+                std::vector<Sprite>& sprites,
+                std::vector<glm::vec3*>& transforms){
  
         renderer.Clear();
-        /*rendering */
-        
-        
-        /*todo fix? */
         texture.Bind(1);
-
         fb.Bind();
+        renderer.Clear();
+        glm::mat4 vp = camera.GetViewProjectionMatrix();
         for (auto &&sprite : sprites)
         {
-        shader.Bind();
-		shader.SetUniform<int>("u_Texture", 1);
-        sprite.SetPostion(glm::vec3(mouseX,mouseY,1));
-        // std::cout << "(" << sprite.GetPosition().x <<","<<sprite.GetPosition().y<<")" <<std::endl;
-        shader.SetUniform<glm::mat4>("u_ViewMatrix", camera.GetViewMatrix());
-        shader.SetUniform<glm::mat4>("u_ProjectionMatrix", camera.GetProjectionMatrix());
-        shader.SetUniform<glm::mat4>("u_ModelMatrix", glm::translate(glm::mat4(1.0f) , sprite.GetPosition()));
-        // shader.SetUniform<glm::mat4>("u_ModelViewProjection", camera.GetViewProjectionMatrix());
-        renderer.Draw(sprite.GetVertexArray());
+            shader.Bind();
+            shader.SetUniform<int>("u_Texture", 1);
+            glm::mat4 mvp = vp * glm::translate(glm::mat4(1.0f) , sprite.m_Position);
+            shader.SetUniform<glm::mat4>("u_MVPMatrix", mvp);
+            renderer.Draw(sprite.GetVertexArray());
         }
+
         fb.Unbind();
         gui.Begin();
         gui.Update(fb, transforms);
@@ -94,13 +96,11 @@ int main()
 
     OrthographicCamera camera = OrthographicCamera(0.0f,10.0f,10.0f,0.0f);
 	std::vector<Sprite> sprites {Sprite(), Sprite()};
-    std::vector<float*> transforms;
+    std::vector<glm::vec3*> transforms;
     for (auto &&sprite : sprites)
     {
-        transforms.push_back(sprite.GetTransform());
-    }
-    
-    
+        transforms.push_back(&sprite.m_Position);
+    }   
 
     int sceneWidth = 640;
     int sceneHeight = 480;
@@ -108,7 +108,6 @@ int main()
 
     Gui gui = Gui(window);
     
-	
     Shader shader("../shaders/Basic.shader");
     
     Texture texture("../res/textures/dice.png");
