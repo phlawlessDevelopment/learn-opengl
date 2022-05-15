@@ -57,7 +57,7 @@ void Gui::Update(FrameBuffer& fb,std::vector<glm::vec3*> & transforms)
 		{
 			// std::cout << "(" << transforms[i]->x <<"," <<transforms[i]->y<<"," <<transforms[i]->z<<")"<<std::endl;
 			ImGui::PushID(i);
-			ImGui::InputFloat3("sprite " + i, &transforms[i]->x);
+			ImGui::InputFloat2("sprite", &transforms[i]->x);
 			ImGui::PopID();
 		}
 		ImGui::End();

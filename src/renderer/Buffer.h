@@ -109,6 +109,8 @@ class FrameBuffer
     void Invalidate(uint32_t width, uint32_t height);
     void Bind() const;
     void Unbind() const;
+    void Delete();
+
     inline unsigned int GetColorAttachment() const {return m_ColorAttachemnt;}
     static inline FrameBuffer* Create(const int width,const int height)
     {

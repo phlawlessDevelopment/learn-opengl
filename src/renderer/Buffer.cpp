@@ -57,22 +57,22 @@ FrameBuffer::FrameBuffer(uint32_t width, uint32_t height)
 }
 FrameBuffer::~FrameBuffer()
 {
-    std::cout << "fb destroyed" << std::endl;
+    // std::cout << "fb destroyed" << std::endl;
 }
 void FrameBuffer::Invalidate(uint32_t width, uint32_t height)
 {
     glCreateFramebuffers(1, &m_RedererID);
-    glBindFramebuffer(GL_FRAMEBUFFER,m_RedererID);
+    glBindFramebuffer(GL_FRAMEBUFFER, m_RedererID);
 
-    glCreateTextures(GL_TEXTURE_2D,1,&m_ColorAttachemnt);
-    glBindTexture(GL_TEXTURE_2D,m_ColorAttachemnt);
+    glCreateTextures(GL_TEXTURE_2D, 1 ,&m_ColorAttachemnt);
+    glBindTexture(GL_TEXTURE_2D, m_ColorAttachemnt);
 
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, m_ColorAttachemnt, 0);
-    glBindFramebuffer(GL_FRAMEBUFFER,0);
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
     glBindTexture(GL_TEXTURE_2D, 0);
 
     if(glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
@@ -80,9 +80,13 @@ void FrameBuffer::Invalidate(uint32_t width, uint32_t height)
 }
 void FrameBuffer::Bind() const
 {
-    glBindFramebuffer(GL_FRAMEBUFFER,m_RedererID);
+    glBindFramebuffer(GL_FRAMEBUFFER, m_RedererID);
 }
 void FrameBuffer::Unbind() const
 {
-    glBindFramebuffer(GL_FRAMEBUFFER,0);
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+}
+void FrameBuffer::Delete()
+{
+    glDeleteFramebuffers(1, &m_RedererID);
 }

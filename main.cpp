@@ -19,8 +19,8 @@
 #include "Node.h"
 
 double mouseX, mouseY = 0.0;
-float sceneWidth = 640.0f;
-float sceneHeight = 480.0f;
+float sceneWidth = 100.0f;
+float sceneHeight = 100.0f;
 
 void mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
 {
@@ -102,7 +102,7 @@ int main()
 
     glfwSetMouseButtonCallback(window, mouse_button_callback);
 
-    OrthographicCamera camera = OrthographicCamera(0.0f,10.0f,10.0f,0.0f);
+    OrthographicCamera camera = OrthographicCamera(0.0f,20.0f,0.0f,15.0f);
 	std::vector<Sprite> sprites {Sprite(), Sprite()};
     std::vector<glm::vec3*> transforms;
 
